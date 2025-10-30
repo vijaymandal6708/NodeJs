@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+</head>
+<body>
+    <a href="/students/home">Home</a>
+    <a href="/students/display">Display</a>
+    <hr>
+
+    <h1 align="center">Edit Student</h1>
+
+    <form action="/students/update/<%= student._id %>" method="post" align="center">
+        <label>Name: </label>
+        <input type="text" name="name" value="<%= student.name %>" required><br><br>
+
+        <label>Roll No: </label>
+        <input type="number" name="rollno" value="<%= student.rollno %>" required><br><br>
+
+        <input type="submit" value="Update Student">
+    </form>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Student</title>
+</head>
+<body>
+    <h2>Search Student</h2>
+
+    <form action="/students/search" method="POST">
+        Enter Rollno : <input type="text" name="rollno" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <table border="1" cellpadding="10" cellspacing="0" align="center">
+        <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+        </tr>
+        <% Student.forEach((key)=>{ %>
+           <tr>
+             <td><%= key.rollno %></td>
+             <td><%= key.name %></td>
+           </tr>
+        <% }) %>
+    </table>
+</body>
+</html>
