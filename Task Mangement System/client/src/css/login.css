@@ -1,0 +1,72 @@
+.home-container {
+  min-height: 77vh;
+  background-color: #f9f3fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  padding-top: 80px;
+}
+
+.home-form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 360px;
+  text-align: center;
+}
+
+
+.home-heading {
+  color: #6a0dad;
+  font-weight: bold;
+  font-size: 26px;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.home-label {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  color: #4a148c;
+  font-weight: 500;
+}
+
+.home-input,
+.home-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 25px;
+  appearance: none; /* ✅ removes default browser arrow style */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f3e5f5 !important; /* ✅ force background */
+  color: #4a148c !important; /* ✅ ensure purple text */
+}
+
+.home-select {
+  margin-bottom: 25px;
+}
+
+.home-button {
+  background-color: #8e24aa;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #ab47bc;
+}
