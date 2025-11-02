@@ -1,26 +1,24 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Layout from './Layout';
-import Home from './pages/Login';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./Layout";
+import Login from "./pages/Login";
+import AdminDashBoard from "./admin/AdminDashBoard";
+import CreateUser from "./admin/CreateUser";
 
 function App() {
-
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout2/>}>
-          </Route>
-        </Routes>
+    <BrowserRouter>
+      <Routes>
+        {/* Standalone Login Page (no header/footer) */}
+        <Route path="/" element={<Login />} />
 
-        <Routes>
-          <Route path="/" element={<Layout/>}>
-            <Route index element={<Home/>}></Route>
-            <Route path="home" element={<Home/>}></Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
+        {/* Routes with Layout (header/footer visible) */}
+        <Route element={<Layout />}>
+          <Route path="admin-dashboard" element={<AdminDashBoard />} />
+          <Route path="create-user" element={<CreateUser />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
