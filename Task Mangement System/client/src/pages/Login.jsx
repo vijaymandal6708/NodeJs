@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [usertype, setUserType] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const styleSheet = document.createElement("style");
@@ -54,7 +56,10 @@ const Login = () => {
       try {
         const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
         const response = await axios.post(api, { email, password });
+        localStorage.setItem("adminname", response.data.Admin.name);
+        localStorage.setItem("adminemail", response.data.Admin.email);
         alert(response.data.msg);
+        navigate("/admin-dashboard")
       } catch (error) {
         alert(error.response?.data?.msg || "Login failed");
       }

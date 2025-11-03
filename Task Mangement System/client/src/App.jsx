@@ -8,10 +8,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Standalone Login Page (no header/footer) */}
         <Route path="/" element={<Login />} />
 
-        {/* Routes with Layout (header/footer visible) */}
         <Route element={<Layout />}>
           <Route path="admin-dashboard" element={<AdminDashBoard />} />
           <Route path="create-user" element={<CreateUser />} />
