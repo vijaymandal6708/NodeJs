@@ -24,10 +24,10 @@ const CreateUser = () => {
       console.log("✅ Response:", response.data);
 
       if (response.data.success) {
-        setMessage(response.data.msg);
+        setMessage("✅ User created successfully!");
         e.target.reset();
       } else {
-        setMessage("⚠️ Something went wrong: " + (response.data.msg || ""));
+        setMessage("⚠️ Something went wrong.");
       }
     } catch (error) {
       console.error("❌ Axios Error:", error);
@@ -35,92 +35,108 @@ const CreateUser = () => {
     }
   };
 
+  // 🎨 --- Styles ---
   const styles = {
-    page: {
-      minHeight: "60vh",
-      background: "linear-gradient(135deg, #f8f6ff, #f3f0ff)",
+    wrapper: {
+      minHeight: "63vh",
+      background: "linear-gradient(135deg, #e0e7ff, #f3f0ff)",
       display: "flex",
       justifyContent: "center",
       alignItems: "flex-start",
       fontFamily: "Poppins, sans-serif",
-      paddingTop: "40px",
+      paddingTop: "60px",
       overflow: "hidden",
     },
-    form: {
+    card: {
       background: "#fff",
-      borderRadius: "16px",
-      boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
+      borderRadius: "20px",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
       width: "100%",
-      maxWidth: "380px",
-      padding: "23px 22px",
+      maxWidth: "420px",
+      padding: "45px 32px",
+      marginTop: "-30px", // 🔼 form shifted upward
       display: "flex",
       flexDirection: "column",
-      transform: slideIn ? "translate(0, 0)" : "translate(-100vw, 0)",
+      transform: slideIn
+        ? "translateX(0)"
+        : "translateX(-100vw)", // ⬅️ previous left-slide animation restored
       opacity: slideIn ? 1 : 0,
       transition:
         "transform 1.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.3s ease-in-out",
     },
-    heading: {
-      color: "#6c63ff",
+    title: {
       textAlign: "center",
-      marginBottom: "20px",
+      fontSize: "26px",
+      color: "#6c63ff",
       fontWeight: "700",
+      marginBottom: "20px",
+      letterSpacing: "0.5px",
+      marginTop: "-10px",
     },
     label: {
-      marginBottom: "5px",
-      fontWeight: "500",
+      marginBottom: "6px",
       color: "#333",
+      fontWeight: "500",
     },
     input: {
-      padding: "9px 11px",
-      border: "2px solid #ccc",
-      borderRadius: "8px",
-      marginBottom: "18px",
+      padding: "10px 12px",
+      borderRadius: "10px",
+      border: "2px solid #ddd",
       fontSize: "15px",
-      transition: "0.3s",
+      marginBottom: "18px",
+      transition: "all 0.25s ease",
       outline: "none",
     },
     select: {
-      padding: "9px 11px",
-      border: "2px solid #ccc",
-      borderRadius: "8px",
-      marginBottom: "18px",
+      padding: "10px 12px",
+      borderRadius: "10px",
+      border: "2px solid #ddd",
       fontSize: "15px",
-      transition: "0.3s",
+      marginBottom: "22px",
+      transition: "all 0.25s ease",
       outline: "none",
     },
     button: {
       background: "#6c63ff",
       color: "#fff",
       border: "none",
-      padding: "9px",
-      borderRadius: "8px",
+      padding: "10px",
+      borderRadius: "10px",
       fontSize: "16px",
-      fontWeight: "500",
+      fontWeight: "600",
       cursor: "pointer",
       transition: "0.3s",
+    },
+    message: {
+      marginTop: "15px",
+      textAlign: "center",
+      fontWeight: "500",
+      color: message.includes("✅") ? "green" : "red",
+    },
+    glowFocus: {
+      borderColor: "#6c63ff",
+      boxShadow: "0 0 6px rgba(108,99,255,0.3)",
     },
   };
 
   return (
-    <div style={styles.page}>
+    <div style={styles.wrapper}>
       <form
-        style={styles.form}
+        style={styles.card}
         onSubmit={handleSubmit}
         onFocus={(e) => {
           if (["INPUT", "SELECT"].includes(e.target.tagName)) {
-            e.target.style.borderColor = "#6c63ff";
-            e.target.style.boxShadow = "0 0 5px rgba(108,99,255,0.3)";
+            Object.assign(e.target.style, styles.glowFocus);
           }
         }}
         onBlur={(e) => {
           if (["INPUT", "SELECT"].includes(e.target.tagName)) {
-            e.target.style.borderColor = "#ccc";
+            e.target.style.borderColor = "#ddd";
             e.target.style.boxShadow = "none";
           }
         }}
       >
-        <h2 style={styles.heading}>Create New User</h2>
+        <h2 style={styles.title}>Create New User</h2>
 
         <label style={styles.label}>Employee Name</label>
         <input
@@ -166,18 +182,7 @@ const CreateUser = () => {
           Submit
         </button>
 
-        {message && (
-          <p
-            style={{
-              color: message.includes("successfully") ? "green" : "red",
-              marginTop: "12px",
-              textAlign: "center",
-              fontWeight: "500",
-            }}
-          >
-            {message}
-          </p>
-        )}
+        {message && <p style={styles.message}>{message}</p>}
       </form>
     </div>
   );

@@ -1,7 +1,7 @@
 const AdminModel = require("../models/adminModel");
-const EmpModel = require("../models/empModel");
 const UserPassword = require("../middlewares/randomPassword");
 const emailSend = require("../middlewares/empMailSen");
+const EmpModel = require("../models/empModel");
 
 // 🟢 Admin Login Controller
 const adminLogin = async (req, res) => {
@@ -42,7 +42,7 @@ const adminLogin = async (req, res) => {
   }
 };
 
-// 🟣 Create User Controller (Full Email + DB integration)
+// 🟢 Create User Controller
 const userCreate = async (req, res) => {
   try {
     const { empname, empemail, designation } = req.body;
@@ -50,47 +50,57 @@ const userCreate = async (req, res) => {
     if (!empname || !empemail || !designation) {
       return res.status(400).json({
         success: false,
-        msg: "All fields (empname, empemail, designation) are required ",
+        msg: "All fields (Name, Email, Designation) are required.",
       });
     }
 
-    // Generate random password
+    const existingEmp = await EmpModel.findOne({ email: empemail });
+    if (existingEmp) {
+      return res.status(409).json({
+        success: false,
+        msg: "Employee with this email already exists.",
+      });
+    }
+
     const emppassword = UserPassword.myPassword();
 
-    // Create employee record in database
-    const newEmployee = await EmpModel.create({
+    const newEmp = await EmpModel.create({
       name: empname,
       email: empemail,
-      designation,
+      designation: designation,
       password: emppassword,
     });
 
-    // Send credentials email
-    const mailSent = await emailSend.userMailsender(empname, empemail, emppassword);
-
-    if (!mailSent) {
-      return res.status(500).json({
-        success: false,
-        msg: "User created but email could not be sent",
-      });
+    try {
+      await emailSend.userMailsender(empname, empemail, emppassword);
+    } catch (emailError) {
+      console.warn("⚠️ Email sending failed:", emailError.message);
     }
 
-    // 4️⃣ Success response
+    console.log("📦 Employee Created:", newEmp);
+
     return res.status(201).json({
       success: true,
-      msg: "User successfully created and credentials sent via email",
-      employee: newEmployee,
+      msg: "User created successfully!",
+      employee: {
+        id: newEmp._id,
+        name: newEmp.name,
+        email: newEmp.email,
+        designation: newEmp.designation,
+      },
     });
   } catch (error) {
-    console.error(" User Creation Error:", error);
+    console.error("❌ Error Creating User:", error);
     return res.status(500).json({
       success: false,
-      msg: "Failed to create user.",
+      msg: "Server Error while creating user. Try again later.",
     });
   }
 };
 
-module.exports = {
-  adminLogin,
-  userCreate,
-};
+const empDisplay=async(req, res)=>{
+      const employee = await EmpModel.find();
+      res.status(200).send(employee);
+}
+
+module.exports = { adminLogin, userCreate, empDisplay };

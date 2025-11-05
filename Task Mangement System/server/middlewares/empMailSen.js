@@ -1,41 +1,34 @@
-const nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 
-const userMailsender = async (uname, uemail, upass) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
 
-    const mailOptions = {
-      from: `"Task Management Admin" <${process.env.EMAIL_USER}>`,
-      to: uemail,
-      subject: "Your Task Management Login Credentials",
-      html: `
-        <div style="font-family: Arial, sans-serif;">
-          <h3>Welcome ${uname},</h3>
-          <p>Your account has been created successfully.</p>
-          <p><b>Email:</b> ${uemail}</p>
-          <p><b>Password:</b> ${upass}</p>
-          <p>Please change your password after first login.</p>
-          <br/>
-          <small>— Task Management System</small>
-        </div>
-      `,
-    };
+const userMailsender=(uname, uemail, upass)=>{
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent successfully to ${uemail}: ${info.response}`);
-    return true;
-  } catch (error) {
-    console.error("❌ Email sending failed:", error.message);
-    return false;
+    
+   var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+   user: "vijaymandal6708@gmail.com", // Your email address
+    pass: "ketb zugh oins hxyt", // Your email password or app-specific password
   }
-};
+});
 
-module.exports = { userMailsender };
+ var mailOptions = {
+      from: 'rajmishtra3@gmail.com',
+      to: uemail,
+      subject: 'Sending Email by Admin using Node.js Task Management System ',
+      text:`Dear :  ${uname}\n Your Password :  ${upass}\n You can Login With Email and this Password`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email Succ sent: ' + info.response);
+        res.send(info.response);
+      }
+    });
+}
+
+module.exports={
+     userMailsender
+}

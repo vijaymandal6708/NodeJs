@@ -74,8 +74,8 @@ const AdminDashBoard = () => {
       flex: 1,
       background: "#ffffff",
       borderRadius: "20px",
-      margin: "25px",
-      padding: "35px 45px",
+      margin: "10px",
+      padding: "20px 20px",
       color: "#333",
       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.05)",
       overflowY: "auto",
@@ -120,7 +120,7 @@ const AdminDashBoard = () => {
           </Link>
 
           <Link
-            to="create-user"
+            to="assign-task"
             style={styles.link}
             onMouseOver={(e) => {
               e.target.style.background = styles.linkHover.background;
@@ -133,24 +133,7 @@ const AdminDashBoard = () => {
               e.target.style.boxShadow = styles.link.boxShadow;
             }}
           >
-            👥 View Users
-          </Link>
-
-          <Link
-            to="reports"
-            style={styles.link}
-            onMouseOver={(e) => {
-              e.target.style.background = styles.linkHover.background;
-              e.target.style.color = styles.linkHover.color;
-              e.target.style.boxShadow = styles.linkHover.boxShadow;
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = styles.link.background;
-              e.target.style.color = styles.link.color;
-              e.target.style.boxShadow = styles.link.boxShadow;
-            }}
-          >
-            📊 Reports
+            👥 Assign Task
           </Link>
         </div>
 

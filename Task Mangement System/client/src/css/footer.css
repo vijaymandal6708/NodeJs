@@ -6,7 +6,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
   border-top: 1px solid #d1c4e9; /* subtle top border */
-  margin-top: 0;
+  margin-top: 0px;
+  border-top: 1px solid black;
 }
 
 .footer-links {
