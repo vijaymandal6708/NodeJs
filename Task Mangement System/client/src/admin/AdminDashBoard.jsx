@@ -3,47 +3,40 @@ import { Link, Outlet } from "react-router-dom";
 const AdminDashBoard = () => {
   const styles = {
     page: {
-      minHeight: "100vh",
+      minHeight: "90vh",
       display: "flex",
       flexDirection: "column",
       fontFamily: "Poppins, sans-serif",
-      /* shift the background image/gradient up 30px without moving contents */
-      background: "linear-gradient(135deg, #f8f6ff, #f3f0ff)",
-      backgroundPosition: "0 -30px", // <-- moves the background up 30px
-      backgroundRepeat: "no-repeat",
+      background: "linear-gradient(135deg, #f9f8ff, #f3f0ff)",
       color: "#4b0082",
-      position: "relative", // keep layout positioning normal
+      position: "relative",
+      marginTop: "70px",
     },
+
+    // 🌸 Light Elegant Header
     header: {
-      background: "#ffffff",
-      padding: "20px 40px",
+      background: "white",
+      padding: "18px 40px",
       textAlign: "center",
-      fontSize: "26px",
+      fontSize: "28px",
       fontWeight: "700",
-      color: "#7a6cf5",
+      fontStyle: "italic",
+      color: "#5a4cd9", // soft violet text
+      letterSpacing: "0.5px",
+      borderBottom: "1px solid #d8d2ff",
       boxShadow: "0 2px 10px rgba(122,108,245,0.1)",
-      borderBottom: "1px solid #ebe7ff",
+      position: "sticky",
+      top: 0,
+      zIndex: 10,
+      borderRadius: "0 0 14px 14px",
     },
-    adminInfo: {
-      textAlign: "right",
-      padding: "12px 40px",
-      fontSize: "15px",
-      color: "#6c63ff",
-      background: "#faf9ff",
-      borderBottom: "1px solid #e9e6ff",
-    },
-    logout: {
-      color: "#ff6b81",
-      marginLeft: "8px",
-      cursor: "pointer",
-      fontWeight: "500",
-      textDecoration: "underline",
-    },
+
     contentArea: {
       display: "flex",
       flex: 1,
       height: "100%",
     },
+
     sidebar: {
       width: "230px",
       background: "#faf9ff",
@@ -53,6 +46,7 @@ const AdminDashBoard = () => {
       gap: "12px",
       borderRight: "1px solid #e8e4ff",
     },
+
     link: {
       textDecoration: "none",
       color: "#7a6cf5",
@@ -65,11 +59,13 @@ const AdminDashBoard = () => {
       transition: "0.3s ease",
       border: "1px solid #ece9ff",
     },
+
     linkHover: {
       background: "#ebe7ff",
       color: "#5a4cd9",
       boxShadow: "0 3px 8px rgba(108, 99, 255, 0.15)",
     },
+
     content: {
       flex: 1,
       background: "#ffffff",
@@ -84,22 +80,10 @@ const AdminDashBoard = () => {
 
   return (
     <div style={styles.page}>
+      {/* 🌸 Light, Elegant Header */}
       <div style={styles.header}>Admin Dashboard</div>
 
-      <div style={styles.adminInfo}>
-        Welcome: <b>{localStorage.getItem("adminname")}</b> | Email:{" "}
-        <b>{localStorage.getItem("adminemail")}</b>
-        <span
-          style={styles.logout}
-          onClick={() => {
-            localStorage.clear();
-            window.location.href = "/";
-          }}
-        >
-          Logout
-        </span>
-      </div>
-
+      {/* Sidebar + Content */}
       <div style={styles.contentArea}>
         <div style={styles.sidebar}>
           <Link

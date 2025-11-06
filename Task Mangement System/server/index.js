@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/admin", AdminRoute);
+app.use("/employee", AdminRoute);
 
 const Port = process.env.PORT || 8000
 app.listen(Port, ()=>{

@@ -56,8 +56,8 @@ const Login = () => {
       try {
         const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
         const response = await axios.post(api, { email, password });
-        localStorage.setItem("adminname", response.data.Admin.name);
-        localStorage.setItem("adminemail", response.data.Admin.email);
+        localStorage.setItem("adminname", response.data.admin.name);
+        localStorage.setItem("adminemail", response.data.admin.email);
         alert(response.data.msg);
         navigate("/admin-dashboard")
       } catch (error) {

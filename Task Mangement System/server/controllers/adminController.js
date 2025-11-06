@@ -2,6 +2,7 @@ const AdminModel = require("../models/adminModel");
 const UserPassword = require("../middlewares/randomPassword");
 const emailSend = require("../middlewares/empMailSen");
 const EmpModel = require("../models/empModel");
+const TaskModel = require("../models/taskModel");
 
 // 🟢 Admin Login Controller
 const adminLogin = async (req, res) => {
@@ -101,6 +102,21 @@ const userCreate = async (req, res) => {
 const empDisplay=async(req, res)=>{
       const employee = await EmpModel.find();
       res.status(200).send(employee);
+};
+
+const taskSave = async (req, res) => {
+    const { id, task, duration, priority } = req.body;
+    const emptask = await TaskModel.create({
+        task: task,
+        duration: duration,
+        priority: priority,
+        empid: id
+    });
+
+    console.log(req.body);
+
+    res.status(201).send("Task Successfully Created!");
+
 }
 
-module.exports = { adminLogin, userCreate, empDisplay };
+module.exports = { adminLogin, userCreate, empDisplay, taskSave };
