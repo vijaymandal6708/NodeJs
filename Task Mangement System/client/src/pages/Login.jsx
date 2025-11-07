@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -51,24 +53,32 @@ const Login = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (usertype === "admin") {
-      try {
-        const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
-        const response = await axios.post(api, { email, password });
-        localStorage.setItem("adminname", response.data.admin.name);
-        localStorage.setItem("adminemail", response.data.admin.email);
-        alert(response.data.msg);
-        navigate("/admin-dashboard")
-      } catch (error) {
-        alert(error.response?.data?.msg || "Login failed");
-      }
-    } else if (usertype === "employee") {
-      alert("Employee login coming soon!");
-    } else {
-      alert("Please select a valid user type.");
+  e.preventDefault();
+
+  if (usertype === "admin") {
+    try {
+      const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
+      const response = await axios.post(api, { email, password });
+
+      localStorage.setItem("adminname", response.data.admin.name);
+      localStorage.setItem("adminemail", response.data.admin.email);
+
+      toast.success(response.data.msg);
+
+      setTimeout(() => {
+        navigate("/admin-dashboard");
+      }, 1500);
+
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Login failed");
     }
-  };
+
+  } else if (usertype === "employee") {
+    toast.info("Employee login coming soon!");
+  } else {
+    toast.warning("Please select a valid user type.");
+  }
+};
 
   const container = {
     display: "flex",
@@ -324,6 +334,8 @@ const Login = () => {
           </button>
         </form>
       </div>
+       {/* ✅ Toastify */}
+    <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

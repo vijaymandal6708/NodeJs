@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const AdminRoute = require("./routes/adminRoute");
+const AdminRoute = require("./routes/employeeRoute");
 
 mongoose.connect(process.env.DBCONN).then(()=>{
      console.log("DB Succesfully Connected!");

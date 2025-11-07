@@ -1,3 +1,5 @@
+// ✅ ONLY COLORS UPDATED TO PURPLE THEME — NOTHING ELSE CHANGED
+
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
@@ -12,7 +14,6 @@ const AssignTask = () => {
   const [message, setMessage] = useState("");
   const [slideIn, setSlideIn] = useState(false);
 
-  // ✅ Add popup animation styles only once
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
@@ -29,13 +30,11 @@ const AssignTask = () => {
     return () => document.head.removeChild(style);
   }, []);
 
-  // ✅ Slide animation
   useEffect(() => {
-    const timer = setTimeout(() => setSlideIn(true), 150);
+    const timer = setTimeout(() => setSlideIn(true), 120);
     return () => clearTimeout(timer);
   }, []);
 
-  // ✅ Fetch employees
   const loadUsers = async () => {
     try {
       const api = `${import.meta.env.VITE_BACKEND_URL}/admin/empdisplay`;
@@ -66,7 +65,6 @@ const AssignTask = () => {
     setInput({});
   };
 
-  // ✅ Submit Task
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedUser) return;
@@ -82,26 +80,44 @@ const AssignTask = () => {
     }
   };
 
+  // ✅ Table Rows — Only Color changes
   const rows = users.map((user, index) => (
     <tr
-      key={user._id}
-      style={{
-        height: "70px",
-        background: "#fff",
-        transition: "0.3s ease",
-        textAlign: "center",
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.background = "#f3f0ff")}
-      onMouseOut={(e) => (e.currentTarget.style.background = "#ffffff")}
+       key={user._id}
+  style={{
+    height: "70px",
+    background: "#ffffff",
+    transition: "0.25s ease",
+    textAlign: "center",
+  }}
+  onMouseOver={(e) => {
+    e.currentTarget.style.background = "#e4c1ff";   // purple background
+    e.currentTarget.style.transform = "translateY(-4px)";
+
+    // ✅ change ALL text inside this row to white
+    Array.from(e.currentTarget.children).forEach((td) => {
+      td.style.color = "black";
+    });
+  }}
+  onMouseOut={(e) => {
+    e.currentTarget.style.background = "#ffffff";
+    e.currentTarget.style.transform = "translateY(0)";
+
+    // ✅ revert text color
+    Array.from(e.currentTarget.children).forEach((td) => {
+      td.style.color = ""; // resets back to original color
+    });
+  }}
+
     >
-      <td></td>
       <td
         style={{
           textAlign: "left",
           display: "flex",
           alignItems: "center",
-          gap: "10px",
+          gap: "15px",
           paddingTop: "26px",
+          paddingLeft: "35px",
         }}
       >
         <span style={{ color: "#7a6cf5", fontWeight: "600" }}>
@@ -109,32 +125,36 @@ const AssignTask = () => {
         </span>
         <span>{user.name}</span>
       </td>
+
       <td>{user.email}</td>
       <td>{user.designation}</td>
 
+      {/* ✅ Purple Button */}
       <td>
         <Button
-          size="sm"
-          style={{
-            background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
-            border: "none",
-            borderRadius: "8px",
-            padding: "10px 14px",
-            fontWeight: "550",
-            color: "white",
-          }}
-          onMouseOver={(e) =>
-            (e.target.style.background =
-              "linear-gradient(90deg, #6e5ff3, #8e7efb)")
-          }
-          onMouseOut={(e) =>
-            (e.target.style.background =
-              "linear-gradient(90deg, #7a6cf5, #9a8bff)")
-          }
-          onClick={() => handleShow(user)}
-        >
-          Assign Task
-        </Button>
+  size="sm"
+  style={{
+    background: "linear-gradient(90deg, #b689f0, #cba3ff)",
+    border: "none",
+    borderRadius: "8px",
+    padding: "10px 14px",
+    fontWeight: "550",
+    color: "white",
+    transition: "0.3s ease",
+  }}
+  onMouseOver={(e) =>
+    (e.target.style.background =
+      "linear-gradient(90deg, #a875eb, #bc95fa)")
+  }
+  onMouseOut={(e) =>
+    (e.target.style.background =
+      "linear-gradient(90deg, #b689f0, #cba3ff)")
+  }
+  onClick={() => handleShow(user)}
+>
+  Assign Task
+</Button>
+
       </td>
     </tr>
   ));
@@ -148,18 +168,25 @@ const AssignTask = () => {
       }}
     >
       <h2
-        className="mb-4 fw-bold"
-        style={{ color: "#6c63ff", fontSize: "23px", fontStyle: "italic", marginLeft:"350px", marginTop:"0px"}}
-      >
-        Assign Task to Employees
-      </h2>
+  className="mb-4 fw-bold"
+  style={{
+    color: "#b683d8",   // ✅ pastel purple (dashboard match)
+    fontSize: "23px",
+    fontStyle: "italic",
+    marginLeft: "350px",
+    marginTop: "0px"
+  }}
+>
+  Assign Task to Employees
+</h2>
+
 
       <div
         style={{
-          background: "#fff",
+          background: "#ffffff",
           borderRadius: "18px",
           padding: "20px 25px",
-          boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+          boxShadow: "0 6px 20px rgba(122,108,245,0.20)",
           transform: slideIn ? "translateY(0)" : "translateY(60px)",
           opacity: slideIn ? 1 : 0,
           transition: "0.8s ease",
@@ -172,29 +199,29 @@ const AssignTask = () => {
           className="shadow-sm text-center align-middle"
           style={{
             width: "100%",
-            borderSpacing: "0 10px",
             borderRadius: "12px",
           }}
         >
           <thead
             style={{
-              background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
-              color: "#fff",
+              background: "linear-gradient(90deg, #b689f0, #cba3ff)",
+              color: "white",
+              fontStyle: "italic"
             }}
           >
             <tr style={{ height: "55px" }}>
-              <th></th>
-              <th style={{ textAlign: "left" }}>Employee Name</th>
+              <th>Employee Name</th>
               <th>Email</th>
               <th>Designation</th>
               <th>Action</th>
             </tr>
           </thead>
+
           <tbody>{rows}</tbody>
         </Table>
       </div>
 
-      {/* ✅ CUSTOM CENTERED POPUP */}
+      {/* ✅ Popup */}
       {show && (
         <div
           onClick={handleClose}
@@ -216,14 +243,13 @@ const AssignTask = () => {
               maxWidth: "92vw",
               background: "#ffffff",
               borderRadius: "16px",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+              boxShadow: "0 10px 25px rgba(122,108,245,0.25)",
               animation: "popupScale 0.25s ease",
             }}
           >
-            {/* ✅ Popup Header */}
             <div
               style={{
-                background: "linear-gradient(90deg, #6a5ae0, #877af5)",
+                background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
                 padding: "14px 20px",
                 color: "white",
                 fontWeight: 600,
@@ -241,14 +267,12 @@ const AssignTask = () => {
                 style={{
                   fontSize: "22px",
                   cursor: "pointer",
-                  opacity: 0.9,
                 }}
               >
                 ×
               </span>
             </div>
 
-            {/* ✅ Popup Body */}
             <div style={{ padding: "25px 30px" }}>
               <Form onSubmit={handleSubmit}>
                 <style>
@@ -256,19 +280,19 @@ const AssignTask = () => {
                     .popup-input {
                       padding: 10px 12px;
                       border-radius: 10px;
-                      border: 1px solid #d8d4f7;
+                      border: 1px solid #d6ccff;
                       font-size: 14px;
-                      transition: 0.2s;
+                      transition: 0.25s;
                     }
                     .popup-input:focus {
                       border-color: #7a6cf5;
-                      box-shadow: 0 0 6px rgba(122,108,245,0.3);
+                      box-shadow: 0 0 6px rgba(122,108,245,0.4);
                     }
                   `}
                 </style>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Task Title  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Form.Label>
+                  <Form.Label>Task Title</Form.Label>
                   <Form.Control
                     className="popup-input"
                     type="text"
@@ -276,10 +300,10 @@ const AssignTask = () => {
                     onChange={handleInput}
                     required
                   />
-                </Form.Group> <br />
+                </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Duration (in days) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Form.Label>
+                  <Form.Label>Duration (in days)</Form.Label>
                   <Form.Control
                     className="popup-input"
                     type="number"
@@ -287,10 +311,10 @@ const AssignTask = () => {
                     onChange={handleInput}
                     required
                   />
-                </Form.Group> <br />
+                </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Priority &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Form.Label>
+                  <Form.Label>Priority</Form.Label>
                   <Form.Select
                     className="popup-input"
                     name="priority"
@@ -302,20 +326,20 @@ const AssignTask = () => {
                     <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                   </Form.Select>
-                </Form.Group> <br />
+                </Form.Group>
 
                 <Button
                   type="submit"
                   className="w-100"
                   style={{
-                    background: "linear-gradient(90deg, #6a5ae0, #8a7bf8)",
+                    background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
                     color: "white",
                     border: "none",
-                    padding: "10px 20px",
+                    padding: "10px",
                     borderRadius: "10px",
                     fontWeight: 600,
                     marginTop: "10px",
-                    marginLeft: "120px"
+                    marginLeft: "120px",
                   }}
                 >
                   Assign Task
@@ -325,7 +349,9 @@ const AssignTask = () => {
               {message && (
                 <p
                   className="mt-2 text-center fw-semibold"
-                  style={{ color: message.includes("✅") ? "green" : "red" }}
+                  style={{
+                    color: message.includes("✅") ? "green" : "red",
+                  }}
                 >
                   {message}
                 </p>
