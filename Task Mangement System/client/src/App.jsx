@@ -11,6 +11,12 @@ import AdminHome from "./admin/AdminDashBoardHome";
 // ✅ Employee
 import EmployeeDashboard from "./employee/EmployeeDashBoard";
 import EmployeeTasks from "./employee/EmployeeTask";
+import EmpLayout from "./EmployeeLayout";
+import EmployeeHome from "./employee/EmployeeHome";
+import EmployeeCompletedTasks from "./employee/EmployeeCompletedTask";
+import EmployeeTotalTask from "./employee/EmployeeTotalTask";
+import EmployeePartiallyCompletedTasks from "./employee/EmployeePartiallyCompletedTasks";
+import EmployeeProfile from "./employee/EmployeeProfile";
 
 function App() {
   return (
@@ -30,13 +36,15 @@ function App() {
         </Route>
 
         {/* ✅ Employee Routes */}
-        <Route element={<Layout />}>
+        <Route element={<EmpLayout />}>
           <Route path="employee-dashboard" element={<EmployeeDashboard />}>
-            {/* employee sees task list on dashboard home */}
-            <Route index element={<EmployeeTasks />} />
+            <Route index element={<EmployeeHome />} />
+            <Route path="employee-task" element={<EmployeeTasks />} />
+            <Route path="employee-completedtask" element={<EmployeeCompletedTasks />} />
+            <Route path="employee-totaltask" element={<EmployeeTotalTask />} />
+            <Route path="employee-partiallycompletedtask" element={<EmployeePartiallyCompletedTasks />} />
+            <Route path="employee-profile" element={<EmployeeProfile />} />
 
-            {/* same page if you use sidebar link */}
-            {/* <Route path="my-tasks" element={<EmployeeTasks />} /> */}
           </Route>
         </Route>
 

@@ -98,29 +98,47 @@ const EmployeeDashboard = () => {
             onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
             onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
           >
-            🏠 Home
+            🏠 Homepage
           </Link>
 
           <Link
-            to="my-tasks"
+            to="employee-task"
             style={styles.link}
             onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
             onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
           >
-            ✅ My Tasks
+            📋 My Current Tasks
           </Link>
 
           <Link
-            to="task-progress"
+            to="employee-totaltask"
             style={styles.link}
             onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
             onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
           >
-            📊 Progress
+            📊 Assigned All Tasks
           </Link>
 
           <Link
-            to="profile"
+            to="employee-completedtask"
+            style={styles.link}
+            onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
+            onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
+          >
+            ✅ Completed Tasks
+          </Link>
+
+          <Link
+            to="employee-partiallycompletedtask"
+            style={styles.link}
+            onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
+            onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
+          >
+            🌗 Partially Completed
+          </Link>
+
+          <Link
+            to="employee-profile"
             style={styles.link}
             onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
             onMouseOut={(e) => Object.assign(e.target.style, styles.link)}

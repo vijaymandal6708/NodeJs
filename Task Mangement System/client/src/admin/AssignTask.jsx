@@ -1,4 +1,4 @@
-// ✅ ONLY COLORS UPDATED TO PURPLE THEME — NOTHING ELSE CHANGED
+// ✅ ONLY NEW ADDITIONS: Toastify imports + toast in submit
 
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -6,12 +6,15 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
+// ✅ Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const AssignTask = () => {
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [input, setInput] = useState({});
-  const [message, setMessage] = useState("");
   const [slideIn, setSlideIn] = useState(false);
 
   useEffect(() => {
@@ -57,7 +60,6 @@ const AssignTask = () => {
   const handleShow = (user) => {
     setSelectedUser(user);
     setShow(true);
-    setMessage("");
   };
 
   const handleClose = () => {
@@ -65,6 +67,7 @@ const AssignTask = () => {
     setInput({});
   };
 
+  // ✅ Toastify integrated here
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedUser) return;
@@ -73,42 +76,46 @@ const AssignTask = () => {
       const api = `${import.meta.env.VITE_BACKEND_URL}/admin/tasksave`;
       await axios.post(api, { id: selectedUser._id, ...input });
 
-      setMessage("✅ Task assigned successfully!");
-      setTimeout(() => handleClose(), 1500);
+      toast.success(" Task Assigned Successfully!", {
+        style: {
+          background: "#4CAF50",
+          color: "white",
+          fontWeight: "600",
+          borderRadius: "10px",
+          marginTop:"50px",
+        },
+      });
+
+      handleClose();
     } catch (error) {
-      setMessage("❌ Failed to assign task.");
+      toast.error(" Failed To Assign Task!", {
+        style: {
+          background: "#ffdfdf",
+          color: "#c30000",
+          fontWeight: "600",
+          marginTop:"50px",
+        },
+      });
     }
   };
 
-  // ✅ Table Rows — Only Color changes
   const rows = users.map((user, index) => (
     <tr
-       key={user._id}
-  style={{
-    height: "70px",
-    background: "#ffffff",
-    transition: "0.25s ease",
-    textAlign: "center",
-  }}
-  onMouseOver={(e) => {
-    e.currentTarget.style.background = "#e4c1ff";   // purple background
-    e.currentTarget.style.transform = "translateY(-4px)";
-
-    // ✅ change ALL text inside this row to white
-    Array.from(e.currentTarget.children).forEach((td) => {
-      td.style.color = "black";
-    });
-  }}
-  onMouseOut={(e) => {
-    e.currentTarget.style.background = "#ffffff";
-    e.currentTarget.style.transform = "translateY(0)";
-
-    // ✅ revert text color
-    Array.from(e.currentTarget.children).forEach((td) => {
-      td.style.color = ""; // resets back to original color
-    });
-  }}
-
+      key={user._id}
+      style={{
+        height: "70px",
+        background: "#ffffff",
+        transition: "0.25s ease",
+        textAlign: "center",
+      }}
+      onMouseOver={(e) => {
+        e.currentTarget.style.background = "#e4c1ff";
+        e.currentTarget.style.transform = "translateY(-4px)";
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.background = "#ffffff";
+        e.currentTarget.style.transform = "translateY(0)";
+      }}
     >
       <td
         style={{
@@ -129,32 +136,30 @@ const AssignTask = () => {
       <td>{user.email}</td>
       <td>{user.designation}</td>
 
-      {/* ✅ Purple Button */}
       <td>
         <Button
-  size="sm"
-  style={{
-    background: "linear-gradient(90deg, #b689f0, #cba3ff)",
-    border: "none",
-    borderRadius: "8px",
-    padding: "10px 14px",
-    fontWeight: "550",
-    color: "white",
-    transition: "0.3s ease",
-  }}
-  onMouseOver={(e) =>
-    (e.target.style.background =
-      "linear-gradient(90deg, #a875eb, #bc95fa)")
-  }
-  onMouseOut={(e) =>
-    (e.target.style.background =
-      "linear-gradient(90deg, #b689f0, #cba3ff)")
-  }
-  onClick={() => handleShow(user)}
->
-  Assign Task
-</Button>
-
+          size="sm"
+          style={{
+            background: "linear-gradient(90deg, #b689f0, #cba3ff)",
+            border: "none",
+            borderRadius: "8px",
+            padding: "10px 14px",
+            fontWeight: "550",
+            color: "white",
+            transition: "0.3s ease",
+          }}
+          onMouseOver={(e) =>
+            (e.target.style.background =
+              "linear-gradient(90deg, #a875eb, #bc95fa)")
+          }
+          onMouseOut={(e) =>
+            (e.target.style.background =
+              "linear-gradient(90deg, #b689f0, #cba3ff)")
+          }
+          onClick={() => handleShow(user)}
+        >
+          Assign Task
+        </Button>
       </td>
     </tr>
   ));
@@ -167,19 +172,21 @@ const AssignTask = () => {
         fontFamily: "Poppins, sans-serif",
       }}
     >
-      <h2
-  className="mb-4 fw-bold"
-  style={{
-    color: "#b683d8",   // ✅ pastel purple (dashboard match)
-    fontSize: "23px",
-    fontStyle: "italic",
-    marginLeft: "350px",
-    marginTop: "0px"
-  }}
->
-  Assign Task to Employees
-</h2>
+      {/* ✅ Toast container */}
+      <ToastContainer position="top-right" theme="colored" />
 
+      <h2
+        className="mb-4 fw-bold"
+        style={{
+          color: "#b683d8",
+          fontSize: "23px",
+          fontStyle: "italic",
+          marginLeft: "350px",
+          marginTop: "0px",
+        }}
+      >
+        Assign Task to Employees
+      </h2>
 
       <div
         style={{
@@ -206,7 +213,7 @@ const AssignTask = () => {
             style={{
               background: "linear-gradient(90deg, #b689f0, #cba3ff)",
               color: "white",
-              fontStyle: "italic"
+              fontStyle: "italic",
             }}
           >
             <tr style={{ height: "55px" }}>
@@ -221,7 +228,6 @@ const AssignTask = () => {
         </Table>
       </div>
 
-      {/* ✅ Popup */}
       {show && (
         <div
           onClick={handleClose}
@@ -292,7 +298,7 @@ const AssignTask = () => {
                 </style>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Task Title</Form.Label>
+                  <Form.Label style={{marginRight:"80px"}}>Task Title</Form.Label>
                   <Form.Control
                     className="popup-input"
                     type="text"
@@ -300,10 +306,10 @@ const AssignTask = () => {
                     onChange={handleInput}
                     required
                   />
-                </Form.Group>
+                </Form.Group> <br />
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Duration (in days)</Form.Label>
+                  <Form.Label style={{marginRight:"20px"}}>Duration (in days)</Form.Label>
                   <Form.Control
                     className="popup-input"
                     type="number"
@@ -311,10 +317,10 @@ const AssignTask = () => {
                     onChange={handleInput}
                     required
                   />
-                </Form.Group>
+                </Form.Group> <br />
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Priority</Form.Label>
+                  <Form.Label style={{marginRight:"130px"}}>Priority</Form.Label>
                   <Form.Select
                     className="popup-input"
                     name="priority"
@@ -345,17 +351,6 @@ const AssignTask = () => {
                   Assign Task
                 </Button>
               </Form>
-
-              {message && (
-                <p
-                  className="mt-2 text-center fw-semibold"
-                  style={{
-                    color: message.includes("✅") ? "green" : "red",
-                  }}
-                >
-                  {message}
-                </p>
-              )}
             </div>
           </div>
         </div>

@@ -58,7 +58,7 @@ const Login = () => {
   if (usertype === "admin") {
     try {
       const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
-      const response = await axios.post(api, { email, password });
+      const response = await axios.post(api, { email, password});
 
       localStorage.setItem("adminname", response.data.admin.name);
       localStorage.setItem("adminemail", response.data.admin.email);
@@ -72,11 +72,27 @@ const Login = () => {
     } catch (error) {
       toast.error(error.response?.data?.msg || "Login failed");
     }
+  }
+  else if (usertype === "employee") {
+    try {
+      const api = `${import.meta.env.VITE_BACKEND_URL}/employee/login`;
+      const response = await axios.post(api, { email, password });
 
-  } else if (usertype === "employee") {
-    toast.info("Employee login coming soon!");
-  } else {
-    toast.warning("Please select a valid user type.");
+      localStorage.setItem("empname", response.data.employee.name);
+      localStorage.setItem("empemail", response.data.employee.email);
+      localStorage.setItem("empid", response.data.employee._id);
+
+
+      toast.success(response.data.msg);
+
+      setTimeout(() => {
+        navigate("/employee-dashboard");
+      }, 1500);
+
+    } catch (error) {
+      toast.error(error.response?.data?.msg || "Login failed");
+    }
+
   }
 };
 
