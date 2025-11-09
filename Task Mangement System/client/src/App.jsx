@@ -26,7 +26,7 @@ function App() {
         {/* ✅ Login */}
         <Route path="/" element={<Login />} />
 
-        {/* ✅ Admin Routes */}
+      
         <Route element={<Layout />}>
           <Route path="admin-dashboard" element={<AdminDashBoard />}>
             <Route index element={<AdminHome />} />
