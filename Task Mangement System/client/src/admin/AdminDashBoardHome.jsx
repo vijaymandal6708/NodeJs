@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import {
   PieChart, Pie, Cell,
   BarChart, Bar, XAxis, YAxis,
@@ -6,14 +9,27 @@ import {
 } from "recharts";
 
 const AdminHome = () => {
-  const taskStats = [
-    { name: "Completed", value: 40 },
-    { name: "Partial", value: 25 },
-    { name: "Pending", value: 15 },
-    { name: "Not Started", value: 20 },
-  ];
-  const employeeStats = [{ name: "Employees", value: 50 }];
+  const [taskStats, setTaskStats] = useState([]);
+  const [employeeStats, setEmployeeStats] = useState([]);
+
   const COLORS = ["#b683d8", "#d3b1f7", "#9c63c5", "#e4c1ff"];
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/taskdisplay`)
+      .then(res => {
+        const t = res.data.tasks;
+
+        setTaskStats([
+          { name: "Completed", value: t.Completed },
+          { name: "Partial", value: t.Partial },
+          { name: "Pending", value: t.Pending },
+          { name: "Not Started", value: t.NotStarted },
+        ]);
+
+        setEmployeeStats([{ name: "Employees", value: res.data.employees }]);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   const styles = {
     page: {
@@ -22,11 +38,11 @@ const AdminHome = () => {
       padding: 20,
       boxSizing: "border-box",
       display: "grid",
-      gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", // ← two equal columns that can shrink
+      gridTemplateColumns: "1fr 1fr",   // ← EXACT same as before
       gap: 24,
     },
     card: {
-      minWidth: 0, // ← critical for grid children so contents can shrink
+      minWidth: 0,
       background: "#fff",
       border: "1px solid #ecdafe",
       borderRadius: 16,
@@ -34,7 +50,6 @@ const AdminHome = () => {
       padding: 24,
     },
     title: {
-      margin: 0,
       marginBottom: 16,
       textAlign: "center",
       color: "#8b5db8",
@@ -43,20 +58,21 @@ const AdminHome = () => {
     },
     chartBoxTall: {
       width: "100%",
-      height: 320, // ← definite height for ResponsiveContainer
+      height: 320,
     },
     chartBoxShort: {
       width: "100%",
       height: 260,
     },
     spanFull: {
-      gridColumn: "1 / -1", // ← spans both columns
+      gridColumn: "1 / -1",
     },
   };
 
   return (
     <div style={styles.page}>
-      {/* LEFT: PIE */}
+
+      {/* LEFT PIE CHART */}
       <div style={styles.card}>
         <h3 style={styles.title}>Task Completion Status</h3>
         <div style={styles.chartBoxTall}>
@@ -82,7 +98,7 @@ const AdminHome = () => {
         </div>
       </div>
 
-      {/* RIGHT: BAR */}
+      {/* RIGHT BAR CHART */}
       <div style={styles.card}>
         <h3 style={styles.title}>Task Breakdown Chart</h3>
         <div style={styles.chartBoxTall}>
@@ -99,7 +115,7 @@ const AdminHome = () => {
         </div>
       </div>
 
-      {/* FULL-WIDTH EMPLOYEE CHART */}
+      {/* FULL WIDTH EMPLOYEE CHART */}
       <div style={{ ...styles.card, ...styles.spanFull }}>
         <h3 style={styles.title}>Total Employees</h3>
         <div style={styles.chartBoxShort}>
@@ -114,6 +130,7 @@ const AdminHome = () => {
           </ResponsiveContainer>
         </div>
       </div>
+
     </div>
   );
 };

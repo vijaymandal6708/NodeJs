@@ -15,7 +15,7 @@ app.use(cors());
 app.use("/admin", AdminRoute);
 app.use("/employee", EmployeeRoute);
 
-const Port = process.env.PORT || 8000
+const Port = process.env.PORT || 9002
 app.listen(Port, ()=>{
     console.log("server is started on port 9002!");
-});
+})

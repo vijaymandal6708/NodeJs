@@ -5,6 +5,7 @@ const AdminController = require("../controllers/adminController");
 route.post("/login", AdminController.adminLogin);
 route.post("/usercreate", AdminController.userCreate);
 route.get("/empdisplay", AdminController.empDisplay);
+route.get("/taskdisplay", AdminController.taskDisplay);
 route.post("/tasksave", AdminController.taskSave);
 
 

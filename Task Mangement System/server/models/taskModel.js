@@ -8,7 +8,7 @@ const taskSchema = new mongoose.Schema({
     empid: String,
     taskstatus: {
         type: String,
-        default: "not started"
+        default: "Not Started"
     },
     completionday: Number,
     submitstatus: Boolean

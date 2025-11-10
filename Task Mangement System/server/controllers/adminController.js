@@ -110,7 +110,10 @@ const taskSave = async (req, res) => {
         task: task,
         duration: duration,
         priority: priority,
-        empid: id
+        empid: id,
+        taskstatus: "Not Started",
+        completionday: 0,
+        submitstatus: false
     });
 
     console.log(req.body);
@@ -119,4 +122,27 @@ const taskSave = async (req, res) => {
 
 }
 
-module.exports = { adminLogin, userCreate, empDisplay, taskSave };
+const taskDisplay = async (req, res) => {
+  try {
+    const completed = await TaskModel.countDocuments({ taskstatus: "Completed" });
+    const partial = await TaskModel.countDocuments({ taskstatus: "Partial" });
+    const pending = await TaskModel.countDocuments({ taskstatus: "Pending" });
+    const notStarted = await TaskModel.countDocuments({ taskstatus: "Not Started" });
+
+    const employees = await EmpModel.countDocuments();
+
+    res.json({
+      tasks: {
+        Completed: completed,
+        Partial: partial,
+        Pending: pending,
+        NotStarted: notStarted
+      },
+      employees
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch stats" });
+  }
+}
+
+module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, };
