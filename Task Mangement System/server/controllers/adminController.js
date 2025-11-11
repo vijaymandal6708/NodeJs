@@ -99,35 +99,38 @@ const userCreate = async (req, res) => {
   }
 };
 
-const empDisplay=async(req, res)=>{
-      const employee = await EmpModel.find();
-      res.status(200).send(employee);
+const empDisplay = async (req, res) => {
+  const employee = await EmpModel.find();
+  res.status(200).send(employee);
 };
 
 const taskSave = async (req, res) => {
-    const { id, task, duration, priority } = req.body;
-    const emptask = await TaskModel.create({
-        task: task,
-        duration: duration,
-        priority: priority,
-        empid: id,
-        taskstatus: "Not Started",
-        completionday: 0,
-        submitstatus: false
-    });
+  const { id, task, duration, priority } = req.body;
+  const emptask = await TaskModel.create({
+    task: task,
+    duration: duration,
+    priority: priority,
+    empid: id,
+    taskstatus: "Not Started",
+    completionday: 0,
+    submitstatus: false,
+  });
 
-    console.log(req.body);
+  console.log(req.body);
 
-    res.status(201).send("Task Successfully Created!");
-
-}
+  res.status(201).send("Task Successfully Created!");
+};
 
 const taskDisplay = async (req, res) => {
   try {
-    const completed = await TaskModel.countDocuments({ taskstatus: "Completed" });
+    const completed = await TaskModel.countDocuments({
+      taskstatus: "Completed",
+    });
     const partial = await TaskModel.countDocuments({ taskstatus: "Partial" });
     const pending = await TaskModel.countDocuments({ taskstatus: "Pending" });
-    const notStarted = await TaskModel.countDocuments({ taskstatus: "Not Started" });
+    const notStarted = await TaskModel.countDocuments({
+      taskstatus: "Not Started",
+    });
 
     const employees = await EmpModel.countDocuments();
 
@@ -136,13 +139,33 @@ const taskDisplay = async (req, res) => {
         Completed: completed,
         Partial: partial,
         Pending: pending,
-        NotStarted: notStarted
+        NotStarted: notStarted,
       },
-      employees
+      employees,
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch stats" });
   }
-}
+};
 
-module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, };
+const viewReport = async (req, res) => {
+  try {
+    const reports = await TaskModel.find().populate(
+      "empid",
+      "name email designation"
+    );
+
+    return res.status(200).json({
+      success: true,
+      reports,
+    });
+  } catch (error) {
+    console.error("View Report Error:", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Failed to load reports",
+    });
+  }
+};
+
+module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, viewReport };

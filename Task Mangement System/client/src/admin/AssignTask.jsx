@@ -78,11 +78,13 @@ const AssignTask = () => {
 
       toast.success(" Task Assigned Successfully!", {
         style: {
-          background: "#4CAF50",
-          color: "white",
-          fontWeight: "600",
+          background: "white",
+          color: "#4CAF50",
+          fontWeight: "500",
           borderRadius: "10px",
           marginTop:"50px",
+          paddingLeft:"20px",
+          fontSize:"14px"
         },
       });
 
