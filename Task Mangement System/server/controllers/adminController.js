@@ -150,7 +150,7 @@ const taskDisplay = async (req, res) => {
 
 const viewReport = async (req, res) => {
   try {
-    const reports = await TaskModel.find().populate(
+    const reports = await TaskModel.find({submitstatus:true}).populate(
       "empid",
       "name email designation"
     );

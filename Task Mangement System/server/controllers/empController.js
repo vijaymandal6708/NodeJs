@@ -77,7 +77,7 @@ const homeShowTask = async (req, res) => {
       completed: tasks.filter(t => t.taskstatus === "completed").length,
       partial: tasks.filter(t => t.taskstatus === "partial").length,
       pending: tasks.filter(t => t.taskstatus === "pending").length,
-      notStarted: tasks.filter(t => t.taskstatus === "Not Started").length,
+      notStarted: tasks.filter(t => t.taskstatus === "not started").length,
     };
 
     return res.status(200).json(stats);

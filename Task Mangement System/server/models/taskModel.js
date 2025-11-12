@@ -7,7 +7,7 @@ const taskSchema = new mongoose.Schema({
     priority: String,
     empid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "emp"
+    ref: "employee"
     },
     taskstatus: {
         type: String,
