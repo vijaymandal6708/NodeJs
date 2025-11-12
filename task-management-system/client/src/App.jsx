@@ -23,8 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* ✅ Login */}
+        
         <Route path="/" element={<Login />} />
 
       
