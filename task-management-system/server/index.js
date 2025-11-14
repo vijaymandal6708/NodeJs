@@ -7,7 +7,7 @@ const AdminRoute = require("./routes/adminRoute");
 const EmployeeRoute = require("./routes/employeeRoute");
 
 app.use(cors({
-    origin: 'https://vijaytaskfrontt.onrender.com',
+    origin: 'https://vijaytaskfront.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
