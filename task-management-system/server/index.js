@@ -14,7 +14,11 @@ app.use(cors({
 
 mongoose.connect(process.env.DBCONN).then(()=>{
      console.log("DB Succesfully Connected!");
+}).catch(err => {
+     console.log("DB ERROR:", err);
 });
+
+
 app.use(express.json());
 
 
