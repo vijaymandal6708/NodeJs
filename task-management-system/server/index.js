@@ -6,11 +6,13 @@ require("dotenv").config();
 const AdminRoute = require("./routes/adminRoute");
 const EmployeeRoute = require("./routes/employeeRoute");
 
-app.use(cors({
-    origin: 'https://vijaytaskfront.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
+// app.use(cors({
+//     origin: '*',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   credentials: true,
+// }));
+
+app.use(cors());
 
 mongoose.connect(process.env.DBCONN).then(()=>{
      console.log("DB Succesfully Connected!");

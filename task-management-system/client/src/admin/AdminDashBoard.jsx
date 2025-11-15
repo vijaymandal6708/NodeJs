@@ -45,6 +45,7 @@ const AdminDashBoard = () => {
       padding: "25px 20px",
       gap: "14px",
       borderRight: "1px solid #e6caf9", // light border
+      fontStyle:"italic"
     },
 
     link: {
@@ -67,7 +68,8 @@ const AdminDashBoard = () => {
     },
 
     content: {
-      minHeight: "100vh",
+      minHeight: "0",
+      minWidth: "0",
       flex: 1,
       background: "#ffffff",
       borderRadius: "20px",
@@ -136,6 +138,15 @@ const AdminDashBoard = () => {
             onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
           >
             📑 View Report
+          </Link>
+
+          <Link
+            to="admin-profile"
+            style={styles.link}
+            onMouseOver={(e) => Object.assign(e.target.style, styles.linkHover)}
+            onMouseOut={(e) => Object.assign(e.target.style, styles.link)}
+          >
+            👤 My Profile
           </Link>
         </div>
 

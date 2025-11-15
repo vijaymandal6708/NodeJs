@@ -18,6 +18,7 @@ import EmployeeTotalTask from "./employee/EmployeeTotalTask";
 import EmployeePartiallyCompletedTasks from "./employee/EmployeePartiallyCompletedTasks";
 import EmployeeProfile from "./employee/EmployeeProfile";
 import ViewReport from "./admin/ViewReport";
+import AdminProfile from "./admin/AdminProfile";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="create-user" element={<CreateUser />} />
             <Route path="assign-task" element={<ViewUser />} />
             <Route path="view-report" element={<ViewReport/>} />
+            <Route path="admin-profile" element={<AdminProfile/>} />
           </Route>
         </Route>
 

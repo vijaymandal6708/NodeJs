@@ -34,15 +34,17 @@ const AdminHome = () => {
   const styles = {
     page: {
       width: "100%",
-      minHeight: "100vh",
-      padding: 20,
+      minHeight: "0",
+      minWidth: "0",
+      padding: "20px",
       boxSizing: "border-box",
       display: "grid",
       gridTemplateColumns: "1fr 1fr",   // ← EXACT same as before
       gap: 24,
     },
     card: {
-      minWidth: 0,
+      minWidth: "0",
+      minHeight: "0",
       background: "#fff",
       border: "1px solid #ecdafe",
       borderRadius: 16,
@@ -59,10 +61,14 @@ const AdminHome = () => {
     chartBoxTall: {
       width: "100%",
       height: 320,
+      minHeight: "0",
+      minWidth: "0",
     },
     chartBoxShort: {
       width: "100%",
       height: 260,
+      minHeight: "0",
+      minWidth: "0",
     },
     spanFull: {
       gridColumn: "1 / -1",

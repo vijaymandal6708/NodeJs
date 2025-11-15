@@ -45,6 +45,7 @@ const EmployeeDashboard = () => {
       padding: "25px 20px",
       gap: "14px",
       borderRight: "1px solid #e6caf9",
+      fontStyle: "italic",
     },
 
     link: {

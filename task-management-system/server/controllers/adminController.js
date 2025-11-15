@@ -124,12 +124,16 @@ const taskSave = async (req, res) => {
 const taskDisplay = async (req, res) => {
   try {
     const completed = await TaskModel.countDocuments({
-      taskstatus: "Completed",
+      taskstatus: /completed/i
     });
-    const partial = await TaskModel.countDocuments({ taskstatus: "Partial" });
-    const pending = await TaskModel.countDocuments({ taskstatus: "Pending" });
+    const partial = await TaskModel.countDocuments({
+      taskstatus: /partial/i
+    });
+    const pending = await TaskModel.countDocuments({
+      taskstatus: /pending/i
+    });
     const notStarted = await TaskModel.countDocuments({
-      taskstatus: "Not Started",
+      taskstatus: /not started/i
     });
 
     const employees = await EmpModel.countDocuments();
@@ -147,6 +151,7 @@ const taskDisplay = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch stats" });
   }
 };
+
 
 const viewReport = async (req, res) => {
   try {
@@ -168,4 +173,56 @@ const viewReport = async (req, res) => {
   }
 };
 
-module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, viewReport };
+const reassignTask = async (req, res) => {
+  try {
+    const { taskid } = req.body;
+
+    const updated = await TaskModel.findByIdAndUpdate(
+      taskid,
+      { submitstatus: false,
+        taskstatus: "Not Started",
+        completionday: 0,
+        reportdescription: "" },
+
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      msg: "Task reassigned",
+      updated,
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, msg: "Error reassigning" });
+  }
+};
+
+const updateAdminPassword = async (req, res) => {
+  try {
+    const { adminid, oldPassword, newPassword } = req.body;
+
+    // Find admin
+    const admin = await AdminModel.findById(adminid);
+
+    if (!admin) {
+      return res.status(404).send({ msg: "Admin not found" });
+    }
+
+    // Check old password
+    if (admin.password !== oldPassword) {
+      return res.status(400).send({ msg: "Old password is incorrect" });
+    }
+
+    // Update password
+    admin.password = newPassword;
+    await admin.save();
+
+    return res.status(200).send({ msg: "Admin password updated successfully!" });
+  } catch (error) {
+    return res.status(500).send({ msg: "Error updating password", error });
+  }
+};
+
+
+
+module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, viewReport, reassignTask, updateAdminPassword };

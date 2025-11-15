@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EmployeeTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -37,17 +39,23 @@ const EmployeeTasks = () => {
   }, []);
 
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const api = `${import.meta.env.VITE_BACKEND_URL}/employee/showtask?id=${localStorage.getItem("empid")}`;
-        const res = await axios.get(api);
-        setTasks(res.data.tasks || []);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadTasks();
-  }, []);
+  loadTasks();
+}, []);
+
+const loadTasks = async () => {
+  try {
+    const api = `${
+      import.meta.env.VITE_BACKEND_URL
+    }/employee/showtask?id=${localStorage.getItem("empid")}`;
+
+    const res = await axios.get(api);
+
+    setTasks((res.data.tasks || []).filter(task => task.submitstatus === false));
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const submitReport = async () => {
     try {
@@ -71,14 +79,23 @@ const EmployeeTasks = () => {
         taskstatus: mapStatus(report.status),
         completionday: report.durationDone,
         submitstatus: true,
+        reportdescription: report.description,
       });
 
-      alert("✅ Report submitted successfully!");
+      toast.success("Report submitted successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+
+      await loadTasks();
 
       setReport({ description: "", status: "", durationDone: "" });
       setShowModal(false);
     } catch (error) {
-      alert("❌ Report submission failed.");
+      toast.error("Report submission failed!", {
+        position: "top-right",
+        autoClose: 2500,
+      });
     }
   };
 
@@ -110,9 +127,7 @@ const EmployeeTasks = () => {
           textAlign: "left",
         }}
       >
-        <span style={{ color: "#7a6cf5", fontWeight: 600 }}>
-          {index + 1}.
-        </span>
+        <span style={{ color: "#7a6cf5", fontWeight: 600 }}>{index + 1}.</span>
         <span>{task.task}</span>
       </td>
 
@@ -153,7 +168,7 @@ const EmployeeTasks = () => {
   return (
     <div
       style={{
-        minHeight: "100vh",              // ✅ Full-page height
+        minHeight: "100vh", // ✅ Full-page height
         width: "100%",
         background: "linear-gradient(135deg, #f3f0ff, #ebe6ff)",
         padding: "30px 50px",
@@ -296,9 +311,7 @@ const EmployeeTasks = () => {
             </label>
             <select
               value={report.status}
-              onChange={(e) =>
-                setReport({ ...report, status: e.target.value })
-              }
+              onChange={(e) => setReport({ ...report, status: e.target.value })}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -365,11 +378,10 @@ const EmployeeTasks = () => {
                 Cancel
               </button>
             </div>
-
           </div>
         </div>
       )}
-
+      <ToastContainer />
     </div>
   );
 };

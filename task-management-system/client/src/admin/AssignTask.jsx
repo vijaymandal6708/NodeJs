@@ -257,13 +257,13 @@ const AssignTask = () => {
           >
             <div
               style={{
-                background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
+                background: "linear-gradient(90deg, #7a6cf5a7, #9a8bff92)",
                 padding: "14px 20px",
                 color: "white",
                 fontWeight: 600,
                 fontSize: "18px",
-                borderTopLeftRadius: "16px",
-                borderTopRightRadius: "16px",
+                borderTopLeftRadius: "10px",
+                borderTopRightRadius: "10px",
                 display: "flex",
                 justifyContent: "space-between",
               }}
@@ -287,7 +287,7 @@ const AssignTask = () => {
                   {`
                     .popup-input {
                       padding: 10px 12px;
-                      border-radius: 10px;
+                      border-radius: 5px;
                       border: 1px solid #d6ccff;
                       font-size: 14px;
                       transition: 0.25s;
@@ -340,11 +340,11 @@ const AssignTask = () => {
                   type="submit"
                   className="w-100"
                   style={{
-                    background: "linear-gradient(90deg, #7a6cf5, #9a8bff)",
+                    background: "linear-gradient(90deg, #6d5df7bd, #9a8bff7d)",
                     color: "white",
                     border: "none",
                     padding: "10px",
-                    borderRadius: "10px",
+                    borderRadius: "5px",
                     fontWeight: 600,
                     marginTop: "10px",
                     marginLeft: "120px",

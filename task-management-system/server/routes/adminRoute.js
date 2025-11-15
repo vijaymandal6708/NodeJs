@@ -8,6 +8,10 @@ route.get("/empdisplay", AdminController.empDisplay);
 route.get("/taskdisplay", AdminController.taskDisplay);
 route.post("/tasksave", AdminController.taskSave);
 route.get("/viewreport", AdminController.viewReport);
+route.put("/reassigntask", AdminController.reassignTask);
+route.post("/updatepassword", AdminController.updateAdminPassword);
+
+
 
 
 

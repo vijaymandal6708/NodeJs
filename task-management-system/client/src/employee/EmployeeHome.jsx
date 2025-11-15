@@ -38,6 +38,8 @@ const EmployeeHome = () => {
           { name: "Not Started", value: Number(d.notStarted) },
         ]);
 
+        console.log(res.data);
+
         setEmployeeStats([{ name: "Your Tasks", value: Number(d.total) }]);
 
         setLoading(false);

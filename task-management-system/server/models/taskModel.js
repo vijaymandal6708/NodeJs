@@ -14,7 +14,8 @@ const taskSchema = new mongoose.Schema({
         default: "Not Started"
     },
     completionday: Number,
-    submitstatus: Boolean
+    submitstatus: Boolean,
+    reportdescription: String,
 });
 
 

@@ -34,7 +34,7 @@ const showTask = async (req, res) => {
 
 const sendReport = async (req, res) => {
   try {
-    const { taskid, taskstatus, completionday, submitstatus } = req.body;
+    const { taskid, taskstatus, completionday, submitstatus,reportdescription } = req.body;
     console.log(req.body);
 
     const updated = await TaskModel.findByIdAndUpdate(
@@ -42,7 +42,8 @@ const sendReport = async (req, res) => {
       {
         taskstatus,
         completionday,
-        submitstatus
+        submitstatus,
+        reportdescription
       },
       { new: true }
     );
@@ -58,26 +59,19 @@ const sendReport = async (req, res) => {
 
 const homeShowTask = async (req, res) => {
   try {
-
-    console.log("REQ QUERY =", req.query);
-    console.log("REQ PARAMS =", req.params);
-    
-
-    const empid = req.query.id;  // ✅ Fix here
-
-    console.log(
-  "TASKS FOUND:",
-  await TaskModel.countDocuments({ empid: empid })
-);
+    const empid = req.query.id;
 
     const tasks = await TaskModel.find({ empid });
 
+    // Normalize statuses (case-insensitive)
+    const normalize = (s) => (s || "").trim().toLowerCase();
+
     const stats = {
       total: tasks.length,
-      completed: tasks.filter(t => t.taskstatus === "completed").length,
-      partial: tasks.filter(t => t.taskstatus === "partial").length,
-      pending: tasks.filter(t => t.taskstatus === "pending").length,
-      notStarted: tasks.filter(t => t.taskstatus === "not started").length,
+      completed: tasks.filter(t => normalize(t.taskstatus) === "completed").length,
+      partial: tasks.filter(t => normalize(t.taskstatus) === "partial").length,
+      pending: tasks.filter(t => normalize(t.taskstatus) === "pending").length,
+      notStarted: tasks.filter(t => normalize(t.taskstatus) === "not started").length,
     };
 
     return res.status(200).json(stats);
@@ -87,6 +81,7 @@ const homeShowTask = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 
 const updatePassword = async (req, res) => {
   try {
