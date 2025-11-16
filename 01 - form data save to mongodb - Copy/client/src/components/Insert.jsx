@@ -14,7 +14,7 @@ const Insert = () => {
     e.preventDefault();
     console.log(frmdata);
     const response = await axios.post("http://localhost:9000/students/insert", frmdata);
-     alert("Student added successfully!");
+     alert("Author added successfully!");
    }
 
 
@@ -22,14 +22,14 @@ const Insert = () => {
     <>
       <h1>This is the insert page</h1>
       <form onSubmit={handleSubmit}>
-        Enter authorname : <input type="text" name="uname" onChange={handleInput}/> <br /> <br />
+        Enter authorname : <input type="text" name="name" onChange={handleInput}/> <br /> <br />
         Enter email : <input type="text" name="email" onChange={handleInput}/> <br /> <br />
         Enter Booktitle :  <input type="text" 
-        name="booktitle" /> <br /> <br />
+        name="booktitle" onChange={handleInput}/> <br /> <br />
         Enter Booktitle :  <input type="text" 
-        name="price" /> <br /> <br />
+        name="price" onChange={handleInput}/> <br /> <br />
 
-        <button type="Save">Add Student</button>
+        <button type="submit">Save!!</button>
       </form>
     </>
   )

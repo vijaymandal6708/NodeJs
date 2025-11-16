@@ -4,7 +4,6 @@ const emailSend = require("../middlewares/empMailSen");
 const EmpModel = require("../models/empModel");
 const TaskModel = require("../models/taskModel");
 
-// 🟢 Admin Login Controller
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -24,7 +23,8 @@ const adminLogin = async (req, res) => {
     if (admin.password !== password) {
       return res.status(401).json({ success: false, msg: "Invalid Password" });
     }
-
+    
+    console.log(admin);
     return res.status(200).json({
       success: true,
       msg: "Successfully Logged In",
@@ -198,31 +198,32 @@ const reassignTask = async (req, res) => {
 };
 
 const updateAdminPassword = async (req, res) => {
+  const { adminId, oldPassword, newPassword } = req.body;
+
+  if (!adminId || !oldPassword || !newPassword) {
+    return res.status(400).json({ msg: "All fields are required." });
+  }
+
   try {
-    const { adminid, oldPassword, newPassword } = req.body;
-
-    // Find admin
-    const admin = await AdminModel.findById(adminid);
-
+    const admin = await AdminModel.findById(adminId);
     if (!admin) {
-      return res.status(404).send({ msg: "Admin not found" });
+      return res.status(404).json({ msg: "Admin not found." });
     }
 
-    // Check old password
+    // Compare plain passwords
     if (admin.password !== oldPassword) {
-      return res.status(400).send({ msg: "Old password is incorrect" });
+      return res.status(400).json({ msg: "Old password is incorrect." });
     }
 
-    // Update password
     admin.password = newPassword;
     await admin.save();
 
-    return res.status(200).send({ msg: "Admin password updated successfully!" });
+    return res.status(200).json({ msg: "Password updated successfully." });
   } catch (error) {
-    return res.status(500).send({ msg: "Error updating password", error });
+    console.error("Error updating password:", error);
+    return res.status(500).json({ msg: "Server error." });
   }
 };
-
 
 
 module.exports = { adminLogin, userCreate, empDisplay, taskSave, taskDisplay, viewReport, reassignTask, updateAdminPassword };

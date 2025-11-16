@@ -2,19 +2,21 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 const Display = () => {
-   const [mtdata, setmydata] = useState([]);
+   const [mydata, setmydata] = useState([]);
    const [authid, setAuthid] = useState("");
    const [bookname, setBookname] = useState("");
    const [price, setPrice] = useState("");
    
-   useEffect(()=>{
-      let loadData = async () =>{
+
+        const loadData = async () =>{
         const res = await axios.get("http://localhost:9000/students/display");
-        setStudent(res.data);
+        setmydata(res.data);
         console.log(res.data)
-      }
-      loadData();
-   },[]);
+      };
+
+      useEffect(()=>{
+        loadData();
+      }, []);
 
    return (
     <>
@@ -27,10 +29,22 @@ const Display = () => {
         </thead>
         <tbody>
             {
-                student.map((i, index)=>(
+                mydata.map((i, index)=>(
                     <tr key={index}>
-                        <td>{key.authorname}</td>
-                        <td>{key.email}</td>
+                        <td>{i.authorname}</td>
+                        <td>{i.email}</td>
+                        <td> 
+                        {
+                         key.booksid.map((key1)=>{
+                             return(
+                                <>
+                                   <p>Title : {key1.bookname}, Price : {key1.price} </p>
+                                </>
+                             )
+                         })
+
+                        } 
+                    </td>
 
                     </tr>
                 ))

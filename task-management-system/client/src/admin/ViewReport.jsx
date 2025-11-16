@@ -112,9 +112,10 @@ const ViewReport = () => {
           color: "#8b5db8",
           textAlign: "center",
           marginBottom: "25px",
+          marginTop:"5px"
         }}
       >
-        📑 View Report
+        View Report
       </h2>
 
       {/* LOOP EMPLOYEE GROUPS */}
@@ -212,7 +213,7 @@ const ViewReport = () => {
                       cursor: "pointer",
                     }}
                   >
-                    Reassign
+                    Reassign Task
                   </button>
                 </div>
               </div>

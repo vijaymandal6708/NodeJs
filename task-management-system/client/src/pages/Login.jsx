@@ -60,8 +60,15 @@ const Login = () => {
       const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
       const response = await axios.post(api, { email, password});
 
+      console.log(response.data);
+
       localStorage.setItem("adminname", response.data.admin.name);
       localStorage.setItem("adminemail", response.data.admin.email);
+      localStorage.setItem("adminid", response.data.admin.id);
+
+      console.log("Stored adminname:", localStorage.getItem("adminname"));
+      console.log("Stored adminemail:", localStorage.getItem("adminemail"));
+      console.log("Stored adminemail:", localStorage.getItem("adminid"));
 
       toast.success(response.data.msg);
 

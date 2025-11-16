@@ -1,32 +1,32 @@
 const express = require("express");
 const route = express.Router();
-const User = require("../models/userModel");
-const Profile = require("../models/profileModel");
+const AuthorModel = require("../models/authorModel");
+const BookModel = require("../models/bookModel");
 
 route.get("/", (req,res)=>{
     res.send("this is student page");
 });
 
 route.post("/insert", async(req,res)=>{
-    const { uname, email, fname, lname} = req.body;
+    const { name, email, booktitle, price} = req.body;
     console.log(req.body);
 
-    const user = await User.create({
-        uname: uname,
+    const author = await AuthorModel.create({
+        authorname: name,
         email:email
     });
 
-    const profile = await Profile.create({
-        fname:fname,
-        lname:lname,
-        userid:user._id 
+    const profile = await BookModel.create({
+        bookname:booktitle,
+        price:price,
+        authorid:author._id 
     });
 
-    res.send("this is student page");
+    res.send("Author Created with books");
 });
 
 route.get("/display", async(req,res)=>{
-    const profile1 = await Profile.find().populate("userid");
+    const profile1 = await AuthorModel.find().populate("bookid");
     res.send(profile1);
 });
 

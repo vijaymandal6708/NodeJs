@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/students", studentRoute);
 mongoose.connect("mongodb://localhost:27017/mongorelation");
 

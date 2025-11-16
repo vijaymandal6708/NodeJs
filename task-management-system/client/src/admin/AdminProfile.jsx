@@ -38,7 +38,7 @@ const AdminProfile = () => {
       const api = `${import.meta.env.VITE_BACKEND_URL}/admin/updatepassword`;
 
       await axios.post(api, {
-        adminid: adminId, // still required for backend
+        adminId, // use this key consistently
         oldPassword: oldPass,
         newPassword: newPass,
       });
