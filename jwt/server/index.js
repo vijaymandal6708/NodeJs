@@ -4,7 +4,9 @@ const studentRoute = require("./routes/studentRoute");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/jwt")
+mongoose.connect("mongodb://localhost:27017/jwt").then(()=>{
+    console.log("mongodb connected")
+})
 
 app.use(cors());
 app.use(express.json());

@@ -3,6 +3,8 @@ import Layout from './Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
+import Dashboard from './pages/Dashboard';
+import Home2 from './pages/Home2';
 
 function App() {
 
@@ -11,9 +13,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout/>}>
-             <Route path="home" element={<Home/>}>Home</Route>
-             <Route path="login" element={<Login/>}>Login</Route>
-             <Route path="registration" element={<Registration/>}>Registration</Route>
+             <Route index element={<Home/>}></Route>
+             <Route path="home" element={<Home/>}></Route>
+             <Route path="home2" element={<Home2/>}></Route>
+             <Route path="login" element={<Login/>}></Route>
+             <Route path="registration" element={<Registration/>}></Route>
+             <Route path="dashboard" element={<Dashboard/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
