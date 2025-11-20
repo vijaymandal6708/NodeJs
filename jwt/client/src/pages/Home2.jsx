@@ -17,7 +17,7 @@ const Home2 = () => {
     }
 
   return (
-    <div>
+    <div style={{ backgroundColor:"rgb(240,248,255)", height:"670px", display:"flex", alignItems:"center", justifyContent:"center"}}>
       <h1>Upload File using Multer</h1>
       Upload File: <input type="file" onChange={handleFile}/>
       <button onClick={handleUpload}>Upload</button>
