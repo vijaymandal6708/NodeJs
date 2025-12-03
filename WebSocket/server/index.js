@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const {Server} = require("socket.io");
 const cors = require("cors");
+const mongoose = require("mongoose");
+require('dotenv').config();
 const app = express();
 app.use(cors());
 
@@ -19,7 +21,7 @@ io.on('connection', (socket)=>{
 
     socket.on('send_message', (data)=>{
         console.log(data);
-        socket.broadcast.emit('receive_message', data);
+        socket.emit('receive_message', data);
     })
 
     socket.on('disconnect', ()=>{
