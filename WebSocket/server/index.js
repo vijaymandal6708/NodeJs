@@ -21,7 +21,8 @@ io.on('connection', (socket)=>{
 
     socket.on('send_message', (data)=>{
         console.log(data);
-        socket.emit('receive_message', data);
+        io.emit('receive_message', data);
+        // changing socket.emit to io.emit
     })
 
     socket.on('disconnect', ()=>{

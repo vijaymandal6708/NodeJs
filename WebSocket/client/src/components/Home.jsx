@@ -17,7 +17,7 @@ const Home = () => {
 
   const sendMessage = () => {
     socket.emit("send_message", { message });
-    setChat((prev) => [...prev, { message }]);
+    // setChat((prev) => [...prev, { message }]);
     setMessage("");
   };
   return (
