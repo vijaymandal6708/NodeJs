@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function (){
+            $("#btn1").click(function (){
+                var div=$("div");
+                div.animate({height:"300px", opacity:"0.4"}, "slow");
+                div.animate({width:"300px", opacity:"0.4"}, "slow");
+                div.animate({height:"200px", opacity:"0.4"}, "slow");
+                div.animate({width:"200px", opacity:"0.4"}, "slow");
+            })
+        })
+    </script>
+</head>
+<body bgcolor="lightblue">
+    <button id="btn1">Show</button>
+    <div style="background-color: lightcoral; width:800px; height:700px; position: absolute;">
+    </div>
+</body>
+</html>

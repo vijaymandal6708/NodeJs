@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jquery.js"></script>
+    <script>
+        $(document).ready(function (){
+            $("#btn1").click(function (){
+                $("#demo1").animate({left: "250px"});
+            })
+        })
+    </script>
+</head>
+<body bgcolor="lightblue">
+    <button id="btn1">Show</button>
+    <div id="demo1" style="background-color: lightcoral; width:300px; height:200px; position: absolute;">
+        <img src="OIP.jpg" style="width: 300px; height: 200px;">
+    </div>
+</body>
+</html>
