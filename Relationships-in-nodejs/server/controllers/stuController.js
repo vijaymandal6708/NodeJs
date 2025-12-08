@@ -22,7 +22,7 @@ const dataDisplay =async (req,res)=>{
     const display = await AuthorModel.find();
     
     console.log(display);
-    res.send(display);
+    // res.send(display);
 }
 
 module.exports = {
