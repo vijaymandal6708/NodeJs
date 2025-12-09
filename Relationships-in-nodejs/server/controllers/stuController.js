@@ -14,15 +14,17 @@ const dataSave=async (req,res)=>{
         price:price,
         authorid: author._id
     })
+
+    await AuthorModel.findByIdAndUpdate(author._id, {$push:{booksid:book._id}});
     
     res.send("okk");
 };
 
 const dataDisplay =async (req,res)=>{
-    const display = await AuthorModel.find();
+    const display = await AuthorModel.find().populate("booksid");
     
     console.log(display);
-    // res.send(display);
+    res.send(display);
 }
 
 module.exports = {

@@ -25,7 +25,7 @@ const Layout = () => {
         <Link to="display2" style={linkStyle}> Display2 </Link>
       </header>
 
-      <main style={{padding:"20px"}}>
+      <main style={{padding:"20px", minHeight:"580px"}}>
         <Outlet />
       </main>
 

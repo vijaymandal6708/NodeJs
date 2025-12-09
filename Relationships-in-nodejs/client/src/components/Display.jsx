@@ -20,7 +20,9 @@ const Display = () => {
       <td>{key.email}</td>
       <td>
         {
-          
+          key.booksid?.map(b=>(
+            <p>{b.bookname}-{b.price}</p>
+          ))
         }
       </td>
     </tr>
