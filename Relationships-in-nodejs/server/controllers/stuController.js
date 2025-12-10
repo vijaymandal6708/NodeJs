@@ -27,7 +27,29 @@ const dataDisplay =async (req,res)=>{
     res.send(display);
 }
 
+const bookSave =async(req,res)=>{
+    const {authid,bookname,price}=req.body;
+
+    const book = await BookModel.create({
+        bookname:bookname,
+        price:price,
+        authorid:authid,
+    })
+
+    await AuthorModel.findByIdAndUpdate(authid, {$push:{booksid:book._id}});
+
+    res.send("book saved successfully");
+}
+
+const dataDisplay2 = async (req,res)=>{
+    const display2 = await BookModel.find().populate("authorid");
+
+    res.send(display2);
+}
+
 module.exports = {
     dataSave,
     dataDisplay,
+    bookSave,
+    dataDisplay2,
 }
