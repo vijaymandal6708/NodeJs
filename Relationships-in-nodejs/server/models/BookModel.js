@@ -6,5 +6,5 @@ const bookSchema = new mongoose.Schema({
     authorid:{type:mongoose.Schema.Types.ObjectId, ref:"author"}
 });
 
-module.exports = mongoose.model("book", bookSchema);
+// module.exports = mongoose.model("book", bookSchema);
 
