@@ -4,7 +4,7 @@
 
 .top-header-container {
   display: flex;
-  padding: 15px 245px;
+  padding: 12px 225px;
   align-items: center;
   justify-content: space-between;
 }
@@ -13,8 +13,9 @@
 .left-container {
   display: flex;
   align-items: center;
-  gap: 30px;
-  font-size: 15px;
+  gap: 25px;
+  font-size: 14px;
+  /* margin-right: -50px; */
 }
 
 /* Logo */
@@ -24,17 +25,17 @@
   display: flex;
   font-weight: 900;
   font-size:20px;
-  /* border: 1px solid black; */
   flex-direction: row;
   padding-top: 5px;
+  margin-left: -10px;
 }
 
 .circle{
     height: 17px;
     width: 17px;
-    background: #0940f5cf;
+    background: #0987f5cf;
     border-radius: 8.5px;
-    top: 0px;
+    top: -3px;
     left: 10px;
     position: relative;
     opacity: 0.4;
@@ -56,24 +57,31 @@
 .right-container {
   display: flex;
   gap: 20px;
+  font-size: 20px;
 }
 
-.right-container p {
+/* .right-container p {
   cursor: pointer;
   font-weight: 500;
-}
+} */
 
-.right-container p:hover {
+/* .right-container p:hover {
   color: #6a0dad;
-}
+} */
 
 
 .bottom-header-container{
     display: flex;
-    padding: 17px 260px;
-    background: #4e0185;
-    gap: 480px;
-    
+    padding: 17px 220px;
+    background: #0c0243;
+    gap: 25px;  
+}
+
+.bottom-header-container a{
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 3px;
 }
 
 .search-bar{
@@ -86,6 +94,7 @@
     align-items: center;
     justify-content: center;
     font-size: 14px;
+    margin-right: 430px;
 }
 
 .search-icon{
@@ -95,7 +104,7 @@
 }
 
 .search-bar input{
-    width: 390px;
+    width: 422px;
     border: none;
     padding: 5px 15px;
     margin: 0px 5px;

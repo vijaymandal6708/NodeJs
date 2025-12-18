@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
 import { IoSearchOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
 
 const Header = () => {
   return (
     <div className="header-container">
+      {/* <div className="top-line" style={{background:"#310253",height:"1px",width:"100%"}}></div> */}
       <div className="top-header-container">
         <div className="left-container">
           <div className="logo">
@@ -20,8 +23,8 @@ const Header = () => {
         </div>
 
         <div className="right-container">
-          <p>Wishlist</p>
-          <p>Cart</p>
+          <FaRegHeart />
+          <FiShoppingCart />
         </div>
       </div>
       <div className="bottom-header-container">
@@ -32,6 +35,7 @@ const Header = () => {
           <input type="text" placeholder="Search products"/>
           <div className="search-button">Search</div>
         </div>
+        <Link to="/login">Login</Link>
         <div className="profile"></div>
       </div>
     </div>
