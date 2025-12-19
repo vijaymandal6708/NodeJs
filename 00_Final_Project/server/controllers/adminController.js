@@ -40,8 +40,7 @@ const adminLogin = async (req, res) => {
 };
 
 const addProduct = async (req, res) => {
-
-  console.log("ADD PRODUCT API HIT"); 
+ 
   upload(req, res, async (err) => {
     if (err) {
       return res.status(500).send("Error uploading files: " + err.message);
