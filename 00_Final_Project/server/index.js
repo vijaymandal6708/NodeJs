@@ -4,7 +4,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminRoute = require("./routes/adminRoute");
-// const ProductRoute = require("./routes/productRoute");
+const ProductRoute = require("./routes/productRoute");
 mongoose.connect(process.env.DBCONN).then(()=>{
     console.log("Database Succesfully Connected!");
 })
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/admin", AdminRoute);
-// app.use("/product", ProductRoute);
+app.use("/product", ProductRoute);
 
 
 
