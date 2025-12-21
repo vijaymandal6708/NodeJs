@@ -16,7 +16,6 @@ const Login = () => {
     console.log("SUBMIT CALLED");
     console.log("USERTYPE:", usertype);
 
-
     try {
       if (usertype === "admin") {
         const api = `${import.meta.env.VITE_BACKEND_URL}/admin/login`;
@@ -70,10 +69,11 @@ const Login = () => {
         <div className="sparkle s5"></div>
         <div className="sparkle s6"></div>
 
-        <h1>Empower Your Workflow</h1>
+        <h1>Power Up Your Tech World</h1>
         <p>
-          Stay organized, collaborate effortlessly, and achieve more with
-          clarity and confidence. Your productivity journey begins here.
+          Discover the latest electronic gadgets, smart accessories, and
+          cutting-edge technology—all in one place. Log in to manage products,
+          orders, and updates with ease.
         </p>
       </div>
 

@@ -28,7 +28,7 @@ const AddProduct = () => {
       formData.append('images', images[i])
     }
 
-    const response=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/add-product`,formData);
+    const response=await axios.post(`${import.meta.env.VITE_BACKENDURL}/admin/add-product`,formData);
     console.log(response);
   };
 

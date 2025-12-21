@@ -3,8 +3,13 @@ import "./Header.css";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
+import { useSelector } from "react-redux";
+// import { addToCart } from "../cartSlice";
 
 const Header = () => {
+  const myData=useSelector(state=>state.mycart.cart);
+  console.log(myData);
+  const productLength=myData.length;
   return (
     <div className="header-container">
       {/* <div className="top-line" style={{background:"#310253",height:"1px",width:"100%"}}></div> */}
@@ -24,7 +29,10 @@ const Header = () => {
 
         <div className="right-container">
           <FaRegHeart />
-          <FiShoppingCart />
+          <div className="cart-container">
+             {productLength}
+            <FiShoppingCart />
+          </div>
         </div>
       </div>
       <div className="bottom-header-container">
