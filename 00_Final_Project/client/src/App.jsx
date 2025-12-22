@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AdminDashboard from "./admin/AdminDashboard";
 import AddProduct from "./admin/AddProduct";
+import ProductDetails from "./pages/ProductDetail";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+
 
         {/* ADMIN ROUTES */}
         <Route path="admin-dashboard" element={<AdminDashboard />}>

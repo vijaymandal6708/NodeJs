@@ -64,6 +64,17 @@ const AddProduct = () => {
           </div>
 
           <div className="form-group">
+            <label>MRP (₹)</label>
+            <input
+              type="number"
+              name="MRP"
+              placeholder="Enter MRP"
+              onChange={handleInput}
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <label>Price (₹)</label>
             <input
               type="number"
@@ -83,6 +94,24 @@ const AddProduct = () => {
               onChange={handleInput}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label>Initial star rating</label>
+            <select name="starRating" onChange={handleInput} required>
+              <option value="">Select category</option>
+              <option>0 Star</option>
+              <option>0.5 Star</option>
+              <option>1 Star</option>
+              <option>1.5 Star</option>
+              <option>2 Star</option>
+              <option>2.5 Star</option>
+              <option>3 Star</option>
+              <option>3.5 Star</option>
+              <option>4 Star</option>
+              <option>4.5 Star</option>
+              <option>5 Star</option>
+            </select>
           </div>
 
         </div>

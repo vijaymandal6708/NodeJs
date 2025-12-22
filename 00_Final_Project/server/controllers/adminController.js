@@ -40,6 +40,8 @@ const adminLogin = async (req, res) => {
 };
 
 const addProduct = async (req, res) => {
+
+  console.log(req.body);
  
   upload(req, res, async (err) => {
     if (err) {
@@ -47,14 +49,16 @@ const addProduct = async (req, res) => {
     }
     try {
 
-      const { name, category, price, quantity, description } = req.body;
+      const { name, category, MRP, price, quantity, starRating, description } = req.body;
       const imageUrls = req.files && req.files.length > 0
           ? req.files.map((file) => file.path) : [];
       const product = await ProductModel.create({
         name: name,
         category: category,
+        MRP: MRP,
         price: price,
         quantity: quantity,
+        starRating: starRating,
         description: description,
         defaultImage: imageUrls[0],
         images: imageUrls,
