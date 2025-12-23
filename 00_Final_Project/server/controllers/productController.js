@@ -5,6 +5,13 @@ const productDisplay = async (req,res) => {
   res.send(productdisplay); 
 }
 
+const productDetail = async (req,res) => {
+  const productdetail = await ProductModel.findOne();
+  console.log(productdetail);
+  res.send(productdetail);
+}
+
 module.exports = {
     productDisplay,
+    productDetail,
 }
