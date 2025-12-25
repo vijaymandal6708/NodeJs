@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminRoute = require("./routes/adminRoute");
 const ProductRoute = require("./routes/productRoute");
+const paymentRoute = require("./routes/paymentRoute")
 mongoose.connect(process.env.DBCONN).then(()=>{
     console.log("Database Succesfully Connected!");
 })
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use("/admin", AdminRoute);
 app.use("/product", ProductRoute);
+app.use("/api/payment/",paymentRoute);
 
 
 

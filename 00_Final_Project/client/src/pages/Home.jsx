@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import Slider from "../components/Slider";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../cartSlice';
+import { addToWishlist } from "../cartSlice";
+import { FaRegHeart } from "react-icons/fa6";
 
 const Home = () => {
   const [mydata, setMydata] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const loadData = async () => {
     const { data } = await axios.get(
@@ -31,12 +36,12 @@ const Home = () => {
         }
 
         .home-page {
-          width: 100vw;
+          width: 100%;
         }
 
         /* ===== GRID ===== */
         .products-container {
-          width: 100vw;
+          width: 100%;
           display: grid;
           grid-template-columns: repeat(4, 1fr); /* ✅ 4 per row */
           gap: 32px;
@@ -52,7 +57,7 @@ const Home = () => {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           display: flex;
           flex-direction: column;
-          width: 325px;
+          width: 320px;
         }
 
         .product-card:hover {
@@ -257,9 +262,10 @@ const Home = () => {
                   <span className="price">₹{item.price}</span>
                   <span className="mrp">₹{item.MRP}</span>
                   <span className="offer">30% off</span>
+                  <FaRegHeart style={{fontSize:"20px",marginLeft:"30px"}} onClick={(e)=>{e.stopPropagation(); dispatch(addToWishlist({id:item._id,name:item.name,description:item.description,category:item.category,price:item.price,image:item.defaultImage,qnty:1}))}}/>
                 </div>
 
-                <button className="add-cart-btn">Add to Cart</button>
+                <button className="add-cart-btn" onClick={(e)=>{e.stopPropagation();dispatch(addToCart({id:item._id,name:item.name,description:item.description,category:item.category,price:item.price,image:item.defaultImage,qnty:1}))}}>Add to Cart</button>
               </div>
             </div>
           ))}
