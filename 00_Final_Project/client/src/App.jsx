@@ -8,31 +8,37 @@ import AddProduct from "./admin/AddProduct";
 import ProductDetails from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import Orders from "./pages/Orders";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
     <Routes>
-
-      {/* Main website + Admin */}
+      {/* MAIN WEBSITE + ADMIN */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="product/:id" element={<ProductDetails />} />
+        <Route path="payment-success" element={<PaymentSuccess />} />
+        <Route path="orders" element={<Orders />} />
 
-
-        {/* ADMIN ROUTES */}
+        {/* ADMIN */}
         <Route path="admin-dashboard" element={<AdminDashboard />}>
           <Route path="add-product" element={<AddProduct />} />
         </Route>
       </Route>
 
-      {/* Auth */}
+      {/* AUTH (NO HEADER/FOOTER) */}
       <Route path="/login" element={<Layout2 />}>
         <Route index element={<Login />} />
       </Route>
 
+      <Route path="/signup" element={<Layout2 />}>
+        <Route index element={<Signup />} />
+      </Route>
     </Routes>
   );
 }

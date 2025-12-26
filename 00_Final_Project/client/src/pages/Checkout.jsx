@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.mycart.cart);
 
   const subtotal = cartItems.reduce(
@@ -14,7 +16,7 @@ const Checkout = () => {
 
   const initPay = (order) => {
     const options = {
-      key: "rzp_test_pzkHWxo3sRdVQW",
+      key: "rzp_test_Rw76xQgbll2xwW",
       amount: order.amount,
       currency: order.currency,
       name: "Gadget Galaxy",
@@ -23,10 +25,11 @@ const Checkout = () => {
       handler: async (response) => {
         try {
           await axios.post(
-            "http://localhost:8080/api/payment/verify",
+            "http://localhost:8000/api/payment/verify",
             response
           );
           alert("Payment Successful ✅");
+          navigate("/payment-success");
         } catch {
           alert("Payment verification failed ❌");
         }
@@ -44,7 +47,7 @@ const Checkout = () => {
     }
 
     const { data } = await axios.post(
-      "http://localhost:8080/api/payment/orders",
+      "http://localhost:8000/api/payment/orders",
       { amount: total * 100 }
     );
 

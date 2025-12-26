@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
 const cartSlice = createSlice({
   name: "mycart",
   initialState: {
-    cart: [],
-    wishlist: [],
+    cart: savedCart,
+    wishlist: savedWishlist,
   },
   reducers: {
-    // ================= CART =================
     addToCart: (state, action) => {
       const item = action.payload;
 
@@ -27,47 +29,57 @@ const cartSlice = createSlice({
           qnty: 1,
         });
       }
+
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
     increaseQuantity: (state, action) => {
       const item = state.cart.find(
         (cartItem) => cartItem.id === action.payload.id
       );
-      if (item) {
-        item.qnty += 1;
-      }
+      if (item) item.qnty += 1;
+
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
     decreaseQuantity: (state, action) => {
       const item = state.cart.find(
         (cartItem) => cartItem.id === action.payload.id
       );
-      if (item && item.qnty > 1) {
-        item.qnty -= 1;
-      }
+      if (item && item.qnty > 1) item.qnty -= 1;
+
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
-    // 🗑️ REMOVE ITEM COMPLETELY
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter(
         (item) => item.id !== action.payload.id
       );
+
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
 
-    // ================= WISHLIST =================
     addToWishlist: (state, action) => {
       const exists = state.wishlist.find(
         (item) => item.id === action.payload.id
       );
-
       if (!exists) {
         state.wishlist.push(action.payload);
+        localStorage.setItem(
+          "wishlist",
+          JSON.stringify(state.wishlist)
+        );
       }
     },
 
     removeFromWishlist: (state, action) => {
       state.wishlist = state.wishlist.filter(
         (item) => item.id !== action.payload.id
+      );
+
+      localStorage.setItem(
+        "wishlist",
+        JSON.stringify(state.wishlist)
       );
     },
   },

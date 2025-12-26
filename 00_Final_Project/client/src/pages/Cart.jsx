@@ -14,7 +14,7 @@ const Cart = () => {
 
   // total price
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.qnty,
+    (sum, item) => (sum) + item.price * item.qnty,
     0
   );
 
@@ -252,6 +252,11 @@ const Cart = () => {
               <div className="summary-row">
                 <span>Subtotal</span>
                 <span>₹{subtotal}</span>
+              </div>
+
+              <div className="summary-row">
+                <span>Handling Fee</span>
+                <span>₹59</span>
               </div>
 
               <div className="summary-row">

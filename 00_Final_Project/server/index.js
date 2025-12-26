@@ -17,7 +17,7 @@ app.use(cors());
 
 app.use("/admin", AdminRoute);
 app.use("/product", ProductRoute);
-app.use("/api/payment/",paymentRoute);
+app.use("/api/payment",paymentRoute);
 
 
 
