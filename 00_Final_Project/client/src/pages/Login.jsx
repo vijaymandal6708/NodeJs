@@ -29,25 +29,28 @@ const Login = () => {
           }
         );
 
-        // localStorage.setItem("adminname", res.data.admin.name);
-        // localStorage.setItem("adminemail", res.data.admin.email);
-        // localStorage.setItem("adminid", res.data.admin.id);
+        localStorage.setItem("adminname", res.data.admin.name);
+        localStorage.setItem("adminemail", res.data.admin.email);
+        localStorage.setItem("adminid", res.data.admin.id);
 
         toast.success(res.data.msg);
         setTimeout(() => navigate("/admin-dashboard"), 1500);
       }
 
-      // if (usertype === "employee") {
-      //   const api = `${import.meta.env.VITE_BACKEND_URL}/employee/login`;
-      //   const res = await axios.post(api, { email, password });
+      if (usertype === "user") {
+        const api = `${import.meta.env.VITE_BACKENDURL}/user/login`;
 
-      //   localStorage.setItem("empname", res.data.employee.name);
-      //   localStorage.setItem("empemail", res.data.employee.email);
-      //   localStorage.setItem("empid", res.data.employee._id);
+        const res = await axios.post(api, {
+          email: adminEmail, // reuse same input
+          password: adminPassword,
+        });
 
-      //   toast.success(res.data.msg);
-      //   setTimeout(() => navigate("/employee-dashboard"), 1500);
-      // }
+        toast.success(res.data.msg);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        setTimeout(() => navigate("/home"), 1500);
+      }
     } catch (err) {
       toast.error(err.response?.data?.msg || "Login failed");
     }
@@ -107,7 +110,7 @@ const Login = () => {
             required
           >
             <option value="">Select user type</option>
-            <option value="employee">Employee</option>
+            <option value="user">User</option>
             <option value="admin">Admin</option>
           </select>
 

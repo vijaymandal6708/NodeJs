@@ -4,8 +4,11 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminRoute = require("./routes/adminRoute");
+const userRoute = require("./routes/userRoute");
 const ProductRoute = require("./routes/productRoute");
-const paymentRoute = require("./routes/paymentRoute")
+const paymentRoute = require("./routes/paymentRoute");
+const orderRoute = require("./routes/orderRoute");
+const jwt = require("jsonwebtoken");
 mongoose.connect(process.env.DBCONN).then(()=>{
     console.log("Database Succesfully Connected!");
 })
@@ -16,8 +19,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/admin", AdminRoute);
+app.use("/user", userRoute);
 app.use("/product", ProductRoute);
 app.use("/api/payment",paymentRoute);
+app.use("/orders",orderRoute);
 
 
 

@@ -6,24 +6,27 @@ import {
 } from "../cartSlice";
 import { FiPlus, FiMinus, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cart = useSelector((state) => state.mycart.cart);
 
-  // total price
-  const subtotal = cart.reduce(
-    (sum, item) => (sum) + item.price * item.qnty,
-    0
-  );
+  // login check
+  const isLoggedIn =
+    localStorage.getItem("user") || localStorage.getItem("token");
 
-  // total quantity (professional count)
+  // total price
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qnty, 0);
+
+  // total quantity
   const totalQty = cart.reduce((sum, item) => sum + item.qnty, 0);
 
   return (
     <>
-      {/* ===== CART CSS ===== */}
+      {/* ===== CART CSS (PREVIOUS LAYOUT) ===== */}
       <style>{`
         * {
           box-sizing: border-box;
@@ -168,6 +171,7 @@ const Cart = () => {
         .checkout-btn {
           margin-top: 26px;
           width: 40%;
+          margin-left: 250px;
           height: 50px;
           border-radius: 12px;
           border: none;
@@ -176,7 +180,6 @@ const Cart = () => {
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
-          margin-left: 250px;
         }
 
         .checkout-btn:hover {
@@ -227,9 +230,7 @@ const Cart = () => {
                   </button>
                 </div>
 
-                <div className="item-total">
-                  ₹{item.price * item.qnty}
-                </div>
+                <div className="item-total">₹{item.price * item.qnty}</div>
 
                 <button
                   className="remove-btn"
@@ -271,7 +272,23 @@ const Cart = () => {
 
               <button
                 className="checkout-btn"
-                onClick={() => navigate("/checkout")}
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    toast.warning("Please login to continue checkout", {
+                      position: "top-right",
+                      autoClose: 2000,
+                    });
+
+                    // ⏳ wait for toast, then redirect
+                    setTimeout(() => {
+                      navigate("/login");
+                    }, 2000);
+
+                    return;
+                  }
+
+                  navigate("/checkout");
+                }}
               >
                 Proceed to Checkout
               </button>
@@ -279,6 +296,8 @@ const Cart = () => {
           </>
         )}
       </div>
+
+      <ToastContainer />
     </>
   );
 };

@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import Slider from "../components/Slider";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../cartSlice';
-import { addToWishlist } from "../cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  addToWishlist,
+  increaseQuantity,
+} from "../cartSlice";
 import { FaRegHeart } from "react-icons/fa6";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const [mydata, setMydata] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cart = useSelector((state) => state.mycart.cart);
+
   const loadData = async () => {
     const { data } = await axios.get(
       `${import.meta.env.VITE_BACKENDURL}/product/product-display`
@@ -24,7 +31,7 @@ const Home = () => {
 
   return (
     <>
-      {/* ===== FULL PAGE CSS ===== */}
+      {/* ================= CSS ================= */}
       <style>{`
         * {
           box-sizing: border-box;
@@ -43,7 +50,7 @@ const Home = () => {
         .products-container {
           width: 100%;
           display: grid;
-          grid-template-columns: repeat(4, 1fr); /* ✅ 4 per row */
+          grid-template-columns: repeat(4, 1fr);
           gap: 32px;
           padding: 60px 80px;
         }
@@ -58,6 +65,7 @@ const Home = () => {
           display: flex;
           flex-direction: column;
           width: 320px;
+          cursor: pointer;
         }
 
         .product-card:hover {
@@ -98,32 +106,19 @@ const Home = () => {
           font-size: 17px;
           font-weight: 600;
           color: #222;
-
-          /* 👇 force 2-line space */
           line-height: 1.4;
-          height: calc(1.4em * 2); /* always 2 lines */
-  
+          height: calc(1.4em * 2);
           display: -webkit-box;
-          -webkit-line-clamp: 2;   /* max 2 lines */
+          -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-
           margin-bottom: 6px;
         }
 
-
-        .category {
-          font-size: 12px;
-          color: #888;
-          text-transform: uppercase;
-          margin-bottom: 0px;
-        }
-
-        /* ===== STAR RATING ===== */
         .rating {
           font-size: 14px;
           color: #f5b301;
-          margin-bottom: 2px;
+          margin-bottom: 6px;
         }
 
         .rating span {
@@ -132,7 +127,6 @@ const Home = () => {
           margin-left: 6px;
         }
 
-        /* ===== PRICE ===== */
         .price-box {
           display: flex;
           align-items: center;
@@ -152,13 +146,11 @@ const Home = () => {
           color: #4b0082;
         }
 
-        .offer{
+        .offer {
           font-size: 12px;
         }
 
-        /* ===== BUTTON ===== */
         .add-cart-btn {
-          margin-top: -10px;
           width: 100%;
           background: linear-gradient(135deg, #4b0082, #6a1bb1);
           border: none;
@@ -195,8 +187,6 @@ const Home = () => {
           color: #666;
         }
 
-
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) {
           .products-container {
             grid-template-columns: repeat(3, 1fr);
@@ -217,7 +207,7 @@ const Home = () => {
         }
       `}</style>
 
-      {/* ===== UI ===== */}
+      {/* ================= UI ================= */}
       <div className="home-page">
         <Slider />
 
@@ -227,50 +217,90 @@ const Home = () => {
         </div>
 
         <div className="products-container">
-          {mydata.map((item) => (
-            <div className="product-card" key={item._id} onClick={()=> navigate(`/product/${item._id}`)}>
-              <div className="product-image">
-                <img src={item.defaultImage} alt={item.name} />
-              </div>
+          {mydata.map((item) => {
+            const existingItem = cart.find(
+              (cartItem) => cartItem.id === item._id
+            );
 
-              <div className="product-info">
-                <h4>{item.name}</h4>
-
-                <div className="rating">
-                  {(() => {
-                    let rating = parseFloat(item.starRating);
-
-                    // ✅ If NaN or invalid → treat as 0
-                    if (isNaN(rating)) rating = 0;
-
-                    const fullStars = Math.floor(rating);
-                    const hasHalfStar = rating - fullStars >= 0.5;
-                    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-                    return (
-                      <>
-                        {"★".repeat(fullStars)}
-                        {hasHalfStar && "⯪"}
-                        {"☆".repeat(emptyStars)}
-                        <span>{rating} stars</span>
-                      </>
-                    );
-                  })()}
+            return (
+              <div
+                className="product-card"
+                key={item._id}
+                onClick={() => navigate(`/product/${item._id}`)}
+              >
+                <div className="product-image">
+                  <img src={item.defaultImage} alt={item.name} />
                 </div>
 
-                <div className="price-box">
-                  <span className="price">₹{item.price}</span>
-                  <span className="mrp">₹{item.MRP}</span>
-                  <span className="offer">30% off</span>
-                  <FaRegHeart style={{fontSize:"20px",marginLeft:"30px"}} onClick={(e)=>{e.stopPropagation(); dispatch(addToWishlist({id:item._id,name:item.name,description:item.description,category:item.category,price:item.price,image:item.defaultImage,qnty:1}))}}/>
-                </div>
+                <div className="product-info">
+                  <h4>{item.name}</h4>
 
-                <button className="add-cart-btn" onClick={(e)=>{e.stopPropagation();dispatch(addToCart({id:item._id,name:item.name,description:item.description,category:item.category,price:item.price,image:item.defaultImage,qnty:1}))}}>Add to Cart</button>
+                  <div className="rating">
+                    {"★".repeat(Math.floor(item.starRating || 0))}
+                    {"☆".repeat(5 - Math.floor(item.starRating || 0))}
+                    <span>{item.starRating || 0} stars</span>
+                  </div>
+
+                  <div className="price-box">
+                    <span className="price">₹{item.price}</span>
+                    <span className="mrp">₹{item.MRP}</span>
+                    <span className="offer">30% off</span>
+
+                    <FaRegHeart
+                      style={{
+                        fontSize: "20px",
+                        marginLeft: "30px",
+                        cursor: "pointer",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        dispatch(addToWishlist({ ...item, qnty: 1 }));
+                        toast.info("Added to wishlist ❤️", {
+                          autoClose: 1200,
+                        });
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    className="add-cart-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+
+                      if (existingItem) {
+                        dispatch(increaseQuantity(existingItem));
+                        toast.info("Quantity increased", {
+                          autoClose: 1200,
+                        });
+                      } else {
+                        dispatch(
+                          addToCart({
+                            id: item._id,
+                            name: item.name,
+                            description: item.description,
+                            category: item.category,
+                            price: item.price,
+                            image: item.defaultImage,
+                            qnty: 1,
+                          })
+                        );
+
+                        toast.success("Item added to cart", {
+                          autoClose: 1200,
+                        });
+                      }
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+
+      <ToastContainer position="top-right" autoClose={1500} />
     </>
   );
 };
