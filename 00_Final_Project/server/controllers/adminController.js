@@ -1,5 +1,6 @@
 const AdminModel = require("../models/AdminModel");
 const ProductModel = require("../models/ProductModel");
+const Order = require("../models/OrderModel");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../cloudinary");
@@ -40,18 +41,19 @@ const adminLogin = async (req, res) => {
 };
 
 const addProduct = async (req, res) => {
-
   console.log(req.body);
- 
+
   upload(req, res, async (err) => {
     if (err) {
       return res.status(500).send("Error uploading files: " + err.message);
     }
     try {
-
-      const { name, category, MRP, price, quantity, starRating, description } = req.body;
-      const imageUrls = req.files && req.files.length > 0
-          ? req.files.map((file) => file.path) : [];
+      const { name, category, MRP, price, quantity, starRating, description } =
+        req.body;
+      const imageUrls =
+        req.files && req.files.length > 0
+          ? req.files.map((file) => file.path)
+          : [];
       const product = await ProductModel.create({
         name: name,
         category: category,
@@ -71,7 +73,60 @@ const addProduct = async (req, res) => {
   });
 };
 
+const getDashboardStats = async (req, res) => {
+  try {
+    /* ===== PRODUCTS BY CATEGORY ===== */
+    const productCategories = await ProductModel.aggregate([
+      {
+        $project: {
+          category: { $toLower: "$category" }, // 👈 normalize
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    /* ===== ORDERS & REVENUE (already exists) ===== */
+    const monthlyRevenue = await Order.aggregate([
+      { $match: { "payment.status": "paid" } },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          revenue: { $sum: "$totalAmount" },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const weeklyOrders = await Order.aggregate([
+      {
+        $group: {
+          _id: { $dayOfWeek: "$createdAt" },
+          orders: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        productCategories,
+        monthlyRevenue,
+        weeklyOrders,
+      },
+    });
+  } catch (err) {
+    console.error("Dashboard stats error:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
 module.exports = {
   adminLogin,
   addProduct,
+  getDashboardStats,
 };

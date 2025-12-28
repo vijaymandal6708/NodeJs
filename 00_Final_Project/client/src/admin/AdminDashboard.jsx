@@ -1,5 +1,6 @@
-import "./AdminDashboard.css";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import axios from "axios";
 import {
   LineChart,
   Line,
@@ -22,194 +23,340 @@ import {
   Treemap,
 } from "recharts";
 
-/* ================= DATA ================= */
-
-/* 1️⃣ Products by Category (Donut) */
-const productCategoryData = [
-  { name: "Electronics", value: 420 },
-  { name: "Fashion", value: 300 },
-  { name: "Furniture", value: 180 },
-  { name: "Books", value: 100 },
-];
-
-/* 2️⃣ Weekly Orders (Bar) */
-const weeklyOrdersData = [
-  { day: "Mon", orders: 120 },
-  { day: "Tue", orders: 98 },
-  { day: "Wed", orders: 140 },
-  { day: "Thu", orders: 110 },
-  { day: "Fri", orders: 170 },
-  { day: "Sat", orders: 200 },
-];
-
-/* 3️⃣ Revenue Overview (Line) */
-const revenueData = [
-  { month: "Jan", revenue: 120000 },
-  { month: "Feb", revenue: 180000 },
-  { month: "Mar", revenue: 150000 },
-  { month: "Apr", revenue: 220000 },
-  { month: "May", revenue: 300000 },
-  { month: "Jun", revenue: 345000 },
-];
-
-/* 4️⃣ Order Trend (Area) */
-const orderTrendData = [
-  { day: "Mon", orders: 120 },
-  { day: "Tue", orders: 98 },
-  { day: "Wed", orders: 140 },
-  { day: "Thu", orders: 110 },
-  { day: "Fri", orders: 170 },
-  { day: "Sat", orders: 200 },
-];
-
-/* 5️⃣ Category Performance (Radar) */
-const categoryPerformanceData = [
-  { category: "Electronics", score: 90 },
-  { category: "Fashion", score: 75 },
-  { category: "Furniture", score: 65 },
-  { category: "Books", score: 50 },
-];
-
-/* 6️⃣ Revenue by Category (TreeMap) */
-const revenueTreeData = [
-  { name: "Electronics", size: 400000 },
-  { name: "Fashion", size: 250000 },
-  { name: "Furniture", size: 180000 },
-  { name: "Books", size: 90000 },
-  { name: "Accessories", size: 120000 },
-];
+/* ================= CONSTANTS ================= */
 
 const COLORS = ["#5b21b6", "#7c3aed", "#a78bfa", "#ddd6fe"];
+
+const CATEGORY_ORDER = [
+  "smartphones",
+  "laptops",
+  "accessories",
+  "cameras",
+];
 
 /* ================= COMPONENT ================= */
 
 const AdminDashboard = () => {
   const location = useLocation();
-
-  // Show charts only on /admin-dashboard
   const showDashboard = location.pathname === "/admin-dashboard";
 
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  /* ================= FETCH REAL DATA ================= */
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "http://localhost:8000/admin/dashboard-stats",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("========== DASHBOARD API RAW RESPONSE ==========");
+console.log(res.data);
+console.log("========== DASHBOARD STATS OBJECT ==========");
+console.log(res.data.stats);
+console.log("========== RAW PRODUCT CATEGORIES FROM BACKEND ==========");
+console.log(stats?.productCategories);
+const productCategoryData = CATEGORY_ORDER.map((cat) => {
+  const found = stats?.productCategories?.find(
+    (i) => i._id?.toLowerCase() === cat
+  );
+
+  console.log("----- CATEGORY CHECK -----");
+  console.log("Frontend category:", cat);
+  console.log("Backend categories:", stats?.productCategories);
+  console.log("Matched result:", found);
+
+  return {
+    name: cat.charAt(0).toUpperCase() + cat.slice(1),
+    value: found ? found.count : 0,
+  };
+});
+
+
+        setStats(res.data.stats);
+      } catch (err) {
+        console.error("Dashboard stats error", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  /* ================= DATA MAPPING ================= */
+
+  // 1️⃣ Products by Category (Donut)
+  const productCategoryData = CATEGORY_ORDER.map((cat) => {
+    const found = stats?.productCategories?.find(
+      (i) => i._id?.toLowerCase() === cat
+    );
+
+    return {
+      name: cat.charAt(0).toUpperCase() + cat.slice(1),
+      value: found ? found.count : 0,
+    };
+  });
+
+  // 2️⃣ Weekly Orders (Bar + Area)
+  const weekMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const weeklyOrdersData =
+    stats?.weeklyOrders?.map((d) => ({
+      day: weekMap[d._id - 1],
+      orders: d.orders,
+    })) || [];
+
+  // 3️⃣ Monthly Revenue (Line)
+  const revenueData =
+    stats?.monthlyRevenue?.map((m) => ({
+      month: new Date(2024, m._id - 1).toLocaleString("default", {
+        month: "short",
+      }),
+      revenue: m.revenue,
+    })) || [];
+
+  // 4️⃣ Category Performance (Radar – derived)
+  const categoryPerformanceData = productCategoryData.map((c) => ({
+    category: c.name,
+    score: c.value * 10, // simple derived score
+  }));
+
+  // 5️⃣ Revenue by Category (TreeMap – zero safe)
+  const revenueTreeData =
+    stats?.revenueByCategory?.length > 0
+      ? stats.revenueByCategory
+      : CATEGORY_ORDER.map((c) => ({
+          name: c.charAt(0).toUpperCase() + c.slice(1),
+          size: 0,
+        }));
+
   return (
-    <div className="admin-layout">
-      {/* ========== SIDEBAR ========== */}
-      <aside className="admin-sidebar">
-        <h2 className="brand">AdminPanel</h2>
-        <nav>
-          <NavLink to="/admin-dashboard" end>
-            Dashboard
-          </NavLink>
-          <NavLink to="add-product">Add Product</NavLink>
-        </nav>
-      </aside>
+    <>
+      {/* ================= CSS ================= */}
+      <style>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Inter", system-ui, sans-serif;
+        }
 
-      {/* ========== MAIN ADMIN AREA ========== */}
-      <section className="admin-main">
-        {/* Header (ONLY on dashboard) */}
-        {showDashboard && (
-          <header className="admin-header">
-            <h1>Admin Dashboard</h1>
-          </header>
-        )}
+        body {
+          background: #f6f7fb;
+        }
 
-        {/* ========== DASHBOARD CONTENT ========== */}
-        {showDashboard && (
-          <div className="charts-grid">
-            {/* 1️⃣ Donut */}
-            <div className="content-card">
-              <h3>Products by Category</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <PieChart>
-                  <Pie
-                    data={productCategoryData}
-                    dataKey="value"
-                    innerRadius={60}
-                    outerRadius={90}
-                  >
-                    {productCategoryData.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+        .admin-layout {
+          display: flex;
+          min-height: 100vh;
+        }
 
-            {/* 2️⃣ Bar */}
-            <div className="content-card">
-              <h3>Weekly Orders</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <BarChart data={weeklyOrdersData}>
-                  <XAxis dataKey="day" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="orders" fill="#5b21b6" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+        .admin-sidebar {
+          width: 250px;
+          background: #0f172a;
+          color: #fff;
+          padding: 24px;
+        }
 
-            {/* 3️⃣ Line */}
-            <div className="content-card">
-              <h3>Revenue Overview</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <LineChart data={revenueData}>
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line dataKey="revenue" stroke="#5b21b6" strokeWidth={3} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+        .brand {
+          font-size: 22px;
+          margin-bottom: 40px;
+        }
 
-            {/* 4️⃣ Area */}
-            <div className="content-card">
-              <h3>Order Trend</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <AreaChart data={orderTrendData}>
-                  <XAxis dataKey="day" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area dataKey="orders" stroke="#7c3aed" fill="#ddd6fe" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+        .admin-sidebar nav a {
+          display: block;
+          padding: 12px 14px;
+          margin-bottom: 6px;
+          border-radius: 8px;
+          color: #cbd5f5;
+          text-decoration: none;
+        }
 
-            {/* 5️⃣ Radar */}
-            <div className="content-card">
-              <h3>Category Performance</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <RadarChart data={categoryPerformanceData}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="category" />
-                  <PolarRadiusAxis />
-                  <Radar
-                    dataKey="score"
-                    stroke="#5b21b6"
-                    fill="#a78bfa"
-                    fillOpacity={0.6}
+        .admin-sidebar nav .active,
+        .admin-sidebar nav a:hover {
+          background: rgba(255,255,255,0.12);
+          color: #fff;
+        }
+
+        .admin-main {
+          flex: 1;
+          padding: 30px;
+        }
+
+        .admin-header {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        .charts-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+
+        .content-card {
+          background: #fff;
+          padding: 20px;
+          border-radius: 14px;
+          box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+        }
+
+        .content-card h3 {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+
+        .loading {
+          text-align: center;
+          margin-top: 100px;
+          font-size: 18px;
+          color: #555;
+        }
+
+        @media (max-width: 1024px) {
+          .charts-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .charts-grid {
+            grid-template-columns: 1fr;
+          }
+          .admin-layout {
+            flex-direction: column;
+          }
+          .admin-sidebar {
+            width: 100%;
+          }
+        }
+      `}</style>
+
+      <div className="admin-layout">
+        {/* SIDEBAR */}
+        <aside className="admin-sidebar">
+          <h2 className="brand">AdminPanel</h2>
+          <nav>
+            <NavLink to="/admin-dashboard" end>Dashboard</NavLink>
+            <NavLink to="add-product">Add Product</NavLink>
+            <NavLink to="orders">Orders</NavLink>
+          </nav>
+        </aside>
+
+        {/* MAIN */}
+        <section className="admin-main">
+          {showDashboard && (
+            <header className="admin-header">
+              <h1>Admin Dashboard</h1>
+            </header>
+          )}
+
+          {loading ? (
+            <p className="loading">Loading dashboard data...</p>
+          ) : (
+            <div className="charts-grid">
+              {/* 1️⃣ Donut */}
+              <div className="content-card">
+                <h3>Products by Category</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <PieChart>
+                    <Pie
+                      data={productCategoryData}
+                      dataKey="value"
+                      innerRadius={60}
+                      outerRadius={90}
+                    >
+                      {productCategoryData.map((_, i) => (
+                        <Cell key={i} fill={COLORS[i]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 2️⃣ Bar */}
+              <div className="content-card">
+                <h3>Weekly Orders</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <BarChart data={weeklyOrdersData}>
+                    <XAxis dataKey="day" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="orders" fill="#5b21b6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 3️⃣ Line */}
+              <div className="content-card">
+                <h3>Revenue Overview</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <LineChart data={revenueData}>
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line dataKey="revenue" stroke="#5b21b6" strokeWidth={3} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 4️⃣ Area */}
+              <div className="content-card">
+                <h3>Order Trend</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <AreaChart data={weeklyOrdersData}>
+                    <XAxis dataKey="day" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area dataKey="orders" stroke="#7c3aed" fill="#ddd6fe" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 5️⃣ Radar */}
+              <div className="content-card">
+                <h3>Category Performance</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <RadarChart data={categoryPerformanceData}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="category" />
+                    <PolarRadiusAxis />
+                    <Radar
+                      dataKey="score"
+                      stroke="#5b21b6"
+                      fill="#a78bfa"
+                      fillOpacity={0.6}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* 6️⃣ TreeMap */}
+              <div className="content-card">
+                <h3>Revenue by Category</h3>
+                <ResponsiveContainer width="100%" height={240}>
+                  <Treemap
+                    data={revenueTreeData}
+                    dataKey="size"
+                    stroke="#fff"
+                    fill="#5b21b6"
                   />
-                </RadarChart>
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             </div>
+          )}
 
-            {/* 6️⃣ TreeMap */}
-            <div className="content-card">
-              <h3>Revenue by Category</h3>
-              <ResponsiveContainer width="100%" height={240}>
-                <Treemap
-                  data={revenueTreeData}
-                  dataKey="size"
-                  stroke="#ffffff"
-                  fill="#5b21b6"
-                />
-              </ResponsiveContainer>
-            </div>
-          </div>
-        )}
-
-        {/* ========== CHILD ROUTES (AddProduct etc.) ========== */}
-        <Outlet />
-      </section>
-    </div>
+          <Outlet />
+        </section>
+      </div>
+    </>
   );
 };
 

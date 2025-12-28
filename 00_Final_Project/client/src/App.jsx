@@ -8,9 +8,9 @@ import AddProduct from "./admin/AddProduct";
 import ProductDetails from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
-import PaymentSuccess from "./pages/PaymentSuccess";
 import Orders from "./pages/Orders";
 import Signup from "./pages/Signup";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="product/:id" element={<ProductDetails />} />
-        <Route path="payment-success" element={<PaymentSuccess />} />
+        <Route path="order-confirmation" element={<OrderConfirmation />} />
         <Route path="orders" element={<Orders />} />
 
         {/* ADMIN */}

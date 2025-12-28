@@ -174,7 +174,7 @@
 .login-form input,
 .login-form select {
   width: 100%;
-  padding: 8px;
+  padding: 8px 20px;
   border-radius: 10px;
   border: 1px solid #d1c4e9;
   background: #f9f3fa;

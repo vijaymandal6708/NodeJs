@@ -1,11 +1,34 @@
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Orders = () => {
-  /**
-   * 🔹 TEMPORARY DATA STRUCTURE
-   * Later you will replace this with backend API response
-   */
-  const orders = useSelector((state) => state.mycart.orders || []);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "http://localhost:8000/orders/my-orders",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setOrders(res.data.orders);
+      } catch (err) {
+        console.error("Failed to fetch orders", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   return (
     <>
@@ -19,97 +42,174 @@ const Orders = () => {
           background: #f4f6f8;
         }
 
+        /* ===== PAGE ===== */
         .orders-page {
           min-height: 100vh;
-          max-width: 1100px;
+          max-width: 960px;
           margin: auto;
-          padding: 40px 20px 80px;
+          padding: 28px 20px 60px;
         }
 
         .orders-title {
-          font-size: 28px;
+          font-size: 25px;
           font-weight: 700;
           text-align: center;
-          margin-bottom: 35px;
+          margin-bottom: 24px;
         }
 
+        /* ===== CARD ===== */
         .order-card {
           background: #ffffff;
-          border-radius: 16px;
-          padding: 24px 30px;
-          margin-bottom: 25px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+          border-radius: 14px;
+          padding: 16px 20px; /* compact */
+          margin-bottom: 20px;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
 
         .order-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 18px;
+          margin-bottom: 6px;
         }
 
         .order-id {
+          font-size: 13.5px;
           font-weight: 600;
-          font-size: 15px;
         }
 
         .order-status {
-          padding: 6px 14px;
+          padding: 4px 12px;
           border-radius: 20px;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 600;
-          background: #e8f7ef;
+          background: #eefaf3;
           color: #2ecc71;
+          text-transform: capitalize;
         }
 
+        /* ===== META ===== */
         .order-meta {
           display: flex;
-          gap: 30px;
-          font-size: 14px;
+          flex-wrap: wrap;
+          gap: 16px;
+          font-size: 13px;
           color: #666;
-          margin-bottom: 20px;
+          margin-bottom: 8px;
         }
 
-        .products {
+        .paid-badge {
+          background: rgba(157, 253, 152, 0.2);
+          color: #1f9d55;
+          padding: 2px 12px 3px;
+          border-radius: 10px;
+          font-weight: 600;
+          font-size: 12px;
+          margin-left: 6px;
+        }
+
+        /* ===== DELIVERY STATUS ===== */
+        .delivery-badge {
+          padding: 3px 12px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 600;
+          margin-left: 6px;
+          text-transform: capitalize;
+        }
+
+        .status-placed {
+          background: #fff4e5;
+          color: #d9822b;
+        }
+
+        .status-processing {
+          background: #e8f0fe;
+          color: #1a73e8;
+        }
+
+        .status-shipped {
+          background: #e6f4ea;
+          color: #137333;
+        }
+
+        .status-delivered {
+          background: #e6f9ef;
+          color: #1f9d55;
+        }
+
+        .status-cancelled {
+          background: #fdecea;
+          color: #d93025;
+        }
+
+        /* ===== ITEMS ===== */
+        .items {
           border-top: 1px solid #eee;
-          padding-top: 16px;
+          padding-top: 8px;
         }
 
-        .product-row {
+        .item-row {
+          display: grid;
+          grid-template-columns: 44px 1fr auto;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 6px;
+          font-size: 13px;
+        }
+
+        .item-image {
+          width: 44px;
+          height: 44px;
+          border-radius: 8px;
+          object-fit: cover;
+          border: 1px solid #eee;
+          background: #fafafa;
+        }
+
+        .item-info {
           display: flex;
-          justify-content: space-between;
-          margin-bottom: 12px;
-          font-size: 14px;
+          flex-direction: column;
+          gap: 1px;
         }
 
-        .product-row span {
+        .item-name {
+          font-weight: 500;
           color: #333;
         }
 
-        .order-total {
-          border-top: 1px solid #eee;
-          padding-top: 16px;
-          margin-top: 20px;
-          display: flex;
-          justify-content: space-between;
-          font-weight: 700;
-          font-size: 16px;
+        .item-qty {
+          font-size: 12px;
+          color: #777;
         }
 
-        .empty-orders {
+        /* ===== PRICE ===== */
+        .price-summary {
+          border-top: 1px solid #eee;
+          padding-top: 8px;
+          margin-top: 10px;
+          font-size: 13px;
+        }
+
+        .price-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 4px;
+        }
+
+        .total {
+          font-size: 15px;
+          font-weight: 700;
+        }
+
+        .empty {
           text-align: center;
-          margin-top: 120px;
-          font-size: 18px;
+          margin-top: 90px;
+          font-size: 17px;
           color: #555;
         }
 
         @media (max-width: 600px) {
-          .order-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-          }
-
           .order-meta {
             flex-direction: column;
             gap: 6px;
@@ -120,35 +220,78 @@ const Orders = () => {
       <div className="orders-page">
         <h2 className="orders-title">My Orders</h2>
 
-        {orders.length === 0 ? (
-          <p className="empty-orders">You have no orders yet 📦</p>
+        {loading ? (
+          <p className="empty">Loading orders...</p>
+        ) : orders.length === 0 ? (
+          <p className="empty">You have no orders yet 📦</p>
         ) : (
-          orders.map((order, index) => (
-            <div className="order-card" key={index}>
+          orders.map((order) => (
+            <div className="order-card" key={order._id}>
+              {/* HEADER */}
               <div className="order-header">
-                <div className="order-id">Order ID: {order.orderId}</div>
-                <div className="order-status">{order.status}</div>
+                <div className="order-id">Order ID: {order._id}</div>
+                <div className="order-status">{order.orderStatus}</div>
               </div>
 
+              {/* META */}
               <div className="order-meta">
-                <span>Date: {order.date}</span>
-                <span>Items: {order.totalQty}</span>
+                <span>
+                  Date: {new Date(order.createdAt).toLocaleDateString()}
+                </span>
+
+                <span>Items: {order.items.length}</span>
+
+                <span>
+                  Payment:
+                  <span className="paid-badge">PAID</span>
+                </span>
+
+                <span>
+                  Delivery:
+                  <span
+                    className={`delivery-badge status-${order.orderStatus}`}
+                  >
+                    {order.orderStatus}
+                  </span>
+                </span>
               </div>
 
-              <div className="products">
-                {order.items.map((item) => (
-                  <div className="product-row" key={item.id}>
-                    <span>
-                      {item.name} × {item.qnty}
-                    </span>
-                    <span>₹{item.price * item.qnty}</span>
+              {/* ITEMS */}
+              <div className="items">
+                {order.items.map((item, index) => (
+                  <div className="item-row" key={index}>
+                    <img
+                      src={item.image || "/no-image.png"}
+                      alt={item.name}
+                      className="item-image"
+                    />
+
+                    <div className="item-info">
+                      <span className="item-name">{item.name}</span>
+                      <span className="item-qty">Qty: {item.quantity}</span>
+                    </div>
+
+                    <span>₹{item.price * item.quantity}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="order-total">
-                <span>Total</span>
-                <span>₹{order.total}</span>
+              {/* PRICE */}
+              <div className="price-summary">
+                <div className="price-row">
+                  <span>Subtotal</span>
+                  <span>₹{order.subtotal}</span>
+                </div>
+
+                <div className="price-row">
+                  <span>Shipping</span>
+                  <span>₹{order.shippingFee}</span>
+                </div>
+
+                <div className="price-row total">
+                  <span>Total</span>
+                  <span>₹{order.totalAmount}</span>
+                </div>
               </div>
             </div>
           ))

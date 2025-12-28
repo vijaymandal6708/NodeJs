@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-const PaymentSuccess = () => {
+const OrderConfirmation = () => {
   const { state } = useLocation();
 
   const {
@@ -24,48 +24,51 @@ const PaymentSuccess = () => {
           background: #f4f6f8;
         }
 
-        /* ===== PAGE ===== */
-        .success-page {
-          width: 100%;
+        /* ===== PAGE (MATCH CHECKOUT WIDTH) ===== */
+        .confirmation-page {
           min-height: 100vh;
+          max-width: 960px;
+          margin: auto;
+          padding: 40px 20px 80px;
         }
 
         /* ===== HEADER ===== */
-        .success-header {
+        .confirmation-header {
           background: #e9f9f0;
-          padding: 35px 80px;
-          border-bottom: 1px solid #cdeedd;
+          padding: 25px 30px;
+          border-radius: 16px;
+          margin-bottom: 30px;
+          border: 1px solid #cdeedd;
         }
 
-        .success-header h1 {
-          font-size: 26px;
+        .confirmation-header h1 {
+          font-size: 24px;
           margin-bottom: 6px;
           color: #1e8449;
         }
 
-        .success-header p {
+        .confirmation-header p {
           color: #2c7a4b;
           font-size: 14px;
         }
 
         /* ===== CONTENT ===== */
-        .success-content {
-          padding: 40px 80px;
+        .confirmation-content {
           display: grid;
           grid-template-columns: 2fr 1fr;
-          gap: 40px;
+          gap: 30px;
         }
 
-        /* ===== LEFT ===== */
-        .section {
+        /* ===== CARD ===== */
+        .card {
           background: white;
-          padding: 30px 35px;
-          margin-bottom: 25px;
-          border-radius: 12px;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+          padding: 28px 30px;
+          margin-bottom: 24px;
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
 
-        .section h3 {
+        .card h3 {
           font-size: 18px;
           margin-bottom: 18px;
         }
@@ -81,13 +84,13 @@ const PaymentSuccess = () => {
           font-weight: 600;
         }
 
-        /* ===== RIGHT ===== */
+        /* ===== SUMMARY ===== */
         .summary {
           background: white;
-          padding: 30px;
-          border-radius: 12px;
+          padding: 28px;
+          border-radius: 16px;
           height: fit-content;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
 
         .summary h3 {
@@ -103,13 +106,13 @@ const PaymentSuccess = () => {
 
         /* ===== ACTIONS ===== */
         .actions {
-          margin-top: 25px;
+          margin-top: 22px;
           display: flex;
-          gap: 16px;
+          gap: 14px;
         }
 
         .btn {
-          padding: 12px 22px;
+          padding: 12px 20px;
           border-radius: 8px;
           text-decoration: none;
           font-weight: 600;
@@ -132,32 +135,27 @@ const PaymentSuccess = () => {
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
-          .success-header,
-          .success-content {
-            padding: 30px 20px;
-          }
-
-          .success-content {
+          .confirmation-content {
             grid-template-columns: 1fr;
           }
         }
       `}</style>
 
-      <div className="success-page">
+      <div className="confirmation-page">
         {/* HEADER */}
-        <div className="success-header">
-          <h1>✅ Order Confirmed</h1>
+        <div className="confirmation-header">
+          <h1>✅ Order Confirmation</h1>
           <p>
-            Thank you for shopping with Gadget Galaxy. Your payment was
-            successful.
+            Thank you for shopping with Gadget Galaxy. Your order has been placed
+            successfully.
           </p>
         </div>
 
         {/* CONTENT */}
-        <div className="success-content">
+        <div className="confirmation-content">
           {/* LEFT */}
           <div>
-            <div className="section">
+            <div className="card">
               <h3>Order Details</h3>
 
               <div className="row">
@@ -181,7 +179,7 @@ const PaymentSuccess = () => {
               </div>
             </div>
 
-            <div className="section">
+            <div className="card">
               <h3>Delivery Address</h3>
               <p style={{ fontSize: "14px", color: "#555" }}>
                 Address will be displayed here once order storage is connected.
@@ -214,4 +212,4 @@ const PaymentSuccess = () => {
   );
 };
 
-export default PaymentSuccess;
+export default OrderConfirmation;

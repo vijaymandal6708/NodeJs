@@ -30,12 +30,9 @@ const Checkout = () => {
           return;
         }
 
-        const res = await axios.get(
-          "http://localhost:8000/user/fetch-user",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get("http://localhost:8000/user/fetch-user", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         setAddress({
           name: res.data.name,
@@ -147,10 +144,15 @@ const Checkout = () => {
 
             await createOrder(); // ✅ FIXED (this was missing proper handling)
 
+            // ✅ SCROLL CHECKOUT PAGE TO TOP
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
             toast.success("Order placed successfully ✅");
-            navigate("/payment-success");
+            setTimeout(() => {
+              navigate("/order-confirmation");
+            }, 3000);
           } catch (err) {
-            toast.error("Order creation failed ❌");
+            toast.error("Failed to place order ❌");
           }
         },
         theme: { color: "#0c0243" },
@@ -275,9 +277,7 @@ const Checkout = () => {
             <input
               value={address.city}
               disabled={!useNewAddress}
-              onChange={(e) =>
-                setAddress({ ...address, city: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, city: e.target.value })}
             />
             <input
               className="full"
@@ -303,7 +303,9 @@ const Checkout = () => {
 
           {cartItems.map((item) => (
             <div key={item.id} className="summary-item">
-              <span>{item.name} × {item.qnty}</span>
+              <span>
+                {item.name} × {item.qnty}
+              </span>
               <strong>₹{item.price * item.qnty}</strong>
             </div>
           ))}
