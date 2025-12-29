@@ -11,6 +11,8 @@ import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import Signup from "./pages/Signup";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import AdminOrders from "./admin/AdminOrders";
+import AdminProducts from "./admin/AdminProducts";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         {/* ADMIN */}
         <Route path="admin-dashboard" element={<AdminDashboard />}>
           <Route path="add-product" element={<AddProduct />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="products" element={<AdminProducts />} />
         </Route>
       </Route>
 

@@ -38,12 +38,14 @@ const CATEGORY_ORDER = [
 
 const AdminDashboard = () => {
   const location = useLocation();
+
+  // ✅ SHOW DASHBOARD ONLY ON ROOT ADMIN ROUTE
   const showDashboard = location.pathname === "/admin-dashboard";
 
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* ================= FETCH REAL DATA ================= */
+  /* ================= FETCH DASHBOARD DATA ================= */
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -57,32 +59,11 @@ const AdminDashboard = () => {
             },
           }
         );
-        console.log("========== DASHBOARD API RAW RESPONSE ==========");
-console.log(res.data);
-console.log("========== DASHBOARD STATS OBJECT ==========");
-console.log(res.data.stats);
-console.log("========== RAW PRODUCT CATEGORIES FROM BACKEND ==========");
-console.log(stats?.productCategories);
-const productCategoryData = CATEGORY_ORDER.map((cat) => {
-  const found = stats?.productCategories?.find(
-    (i) => i._id?.toLowerCase() === cat
-  );
 
-  console.log("----- CATEGORY CHECK -----");
-  console.log("Frontend category:", cat);
-  console.log("Backend categories:", stats?.productCategories);
-  console.log("Matched result:", found);
-
-  return {
-    name: cat.charAt(0).toUpperCase() + cat.slice(1),
-    value: found ? found.count : 0,
-  };
-});
-
-
+        console.log("📊 DASHBOARD STATS:", res.data.stats);
         setStats(res.data.stats);
       } catch (err) {
-        console.error("Dashboard stats error", err);
+        console.error("Dashboard stats error:", err);
       } finally {
         setLoading(false);
       }
@@ -91,12 +72,12 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
     fetchStats();
   }, []);
 
-  /* ================= DATA MAPPING ================= */
+  /* ================= SAFE DATA MAPPING ================= */
 
-  // 1️⃣ Products by Category (Donut)
+  // 1️⃣ Products by Category
   const productCategoryData = CATEGORY_ORDER.map((cat) => {
     const found = stats?.productCategories?.find(
-      (i) => i._id?.toLowerCase() === cat
+      (i) => i._id === cat
     );
 
     return {
@@ -105,7 +86,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
     };
   });
 
-  // 2️⃣ Weekly Orders (Bar + Area)
+  // 2️⃣ Weekly Orders
   const weekMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const weeklyOrdersData =
     stats?.weeklyOrders?.map((d) => ({
@@ -113,7 +94,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
       orders: d.orders,
     })) || [];
 
-  // 3️⃣ Monthly Revenue (Line)
+  // 3️⃣ Monthly Revenue
   const revenueData =
     stats?.monthlyRevenue?.map((m) => ({
       month: new Date(2024, m._id - 1).toLocaleString("default", {
@@ -122,20 +103,25 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
       revenue: m.revenue,
     })) || [];
 
-  // 4️⃣ Category Performance (Radar – derived)
+  // 4️⃣ Category Performance (Radar)
   const categoryPerformanceData = productCategoryData.map((c) => ({
     category: c.name,
-    score: c.value * 10, // simple derived score
+    score: c.value * 10,
   }));
 
-  // 5️⃣ Revenue by Category (TreeMap – zero safe)
-  const revenueTreeData =
-    stats?.revenueByCategory?.length > 0
-      ? stats.revenueByCategory
-      : CATEGORY_ORDER.map((c) => ({
-          name: c.charAt(0).toUpperCase() + c.slice(1),
-          size: 0,
-        }));
+  // 5️⃣ Revenue by Category (TreeMap – safe)
+  const revenueTreeData = CATEGORY_ORDER.map((cat) => {
+    const found = stats?.revenueByCategory?.find(
+      (i) => i._id === cat
+    );
+
+    return {
+      name: cat.charAt(0).toUpperCase() + cat.slice(1),
+      size: found ? found.size : 1, // Treemap needs > 0
+    };
+  });
+
+  /* ================= UI ================= */
 
   return (
     <>
@@ -157,6 +143,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
           min-height: 100vh;
         }
 
+        /* SIDEBAR */
         .admin-sidebar {
           width: 250px;
           background: #0f172a;
@@ -184,6 +171,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
           color: #fff;
         }
 
+        /* MAIN */
         .admin-main {
           flex: 1;
           padding: 30px;
@@ -194,6 +182,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
           margin-bottom: 30px;
         }
 
+        /* GRID */
         .charts-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
@@ -243,6 +232,7 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
         <aside className="admin-sidebar">
           <h2 className="brand">AdminPanel</h2>
           <nav>
+            <NavLink to="products">Products and Stocks</NavLink>
             <NavLink to="/admin-dashboard" end>Dashboard</NavLink>
             <NavLink to="add-product">Add Product</NavLink>
             <NavLink to="orders">Orders</NavLink>
@@ -257,102 +247,114 @@ const productCategoryData = CATEGORY_ORDER.map((cat) => {
             </header>
           )}
 
-          {loading ? (
-            <p className="loading">Loading dashboard data...</p>
-          ) : (
-            <div className="charts-grid">
-              {/* 1️⃣ Donut */}
-              <div className="content-card">
-                <h3>Products by Category</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <PieChart>
-                    <Pie
-                      data={productCategoryData}
-                      dataKey="value"
-                      innerRadius={60}
-                      outerRadius={90}
-                    >
-                      {productCategoryData.map((_, i) => (
-                        <Cell key={i} fill={COLORS[i]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+          {/* ✅ DASHBOARD ONLY */}
+          {showDashboard && (
+            loading ? (
+              <p className="loading">Loading dashboard data...</p>
+            ) : (
+              <div className="charts-grid">
+                {/* 1️⃣ Donut */}
+                <div className="content-card">
+                  <h3>Products by Category</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <PieChart>
+                      <Pie
+                        data={productCategoryData}
+                        dataKey="value"
+                        innerRadius={60}
+                        outerRadius={90}
+                      >
+                        {productCategoryData.map((_, i) => (
+                          <Cell key={i} fill={COLORS[i]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {/* 2️⃣ Bar */}
-              <div className="content-card">
-                <h3>Weekly Orders</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={weeklyOrdersData}>
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="orders" fill="#5b21b6" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+                {/* 2️⃣ Bar */}
+                <div className="content-card">
+                  <h3>Weekly Orders</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <BarChart data={weeklyOrdersData}>
+                      <XAxis dataKey="day" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="orders" fill="#5b21b6" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {/* 3️⃣ Line */}
-              <div className="content-card">
-                <h3>Revenue Overview</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <LineChart data={revenueData}>
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line dataKey="revenue" stroke="#5b21b6" strokeWidth={3} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+                {/* 3️⃣ Line */}
+                <div className="content-card">
+                  <h3>Revenue Overview</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <LineChart data={revenueData}>
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line
+                        dataKey="revenue"
+                        stroke="#5b21b6"
+                        strokeWidth={3}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {/* 4️⃣ Area */}
-              <div className="content-card">
-                <h3>Order Trend</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <AreaChart data={weeklyOrdersData}>
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area dataKey="orders" stroke="#7c3aed" fill="#ddd6fe" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+                {/* 4️⃣ Area */}
+                <div className="content-card">
+                  <h3>Order Trend</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <AreaChart data={weeklyOrdersData}>
+                      <XAxis dataKey="day" />
+                      <YAxis />
+                      <Tooltip />
+                      <Area
+                        dataKey="orders"
+                        stroke="#7c3aed"
+                        fill="#ddd6fe"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {/* 5️⃣ Radar */}
-              <div className="content-card">
-                <h3>Category Performance</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <RadarChart data={categoryPerformanceData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="category" />
-                    <PolarRadiusAxis />
-                    <Radar
-                      dataKey="score"
-                      stroke="#5b21b6"
-                      fill="#a78bfa"
-                      fillOpacity={0.6}
+                {/* 5️⃣ Radar */}
+                <div className="content-card">
+                  <h3>Category Performance</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <RadarChart data={categoryPerformanceData}>
+                      <PolarGrid />
+                      <PolarAngleAxis dataKey="category" />
+                      <PolarRadiusAxis />
+                      <Radar
+                        dataKey="score"
+                        stroke="#5b21b6"
+                        fill="#a78bfa"
+                        fillOpacity={0.6}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* 6️⃣ TreeMap */}
+                <div className="content-card">
+                  <h3>Revenue by Category</h3>
+                  <ResponsiveContainer width="100%" height={240}>
+                    <Treemap
+                      data={revenueTreeData}
+                      dataKey="size"
+                      stroke="#fff"
+                      fill="#5b21b6"
                     />
-                  </RadarChart>
-                </ResponsiveContainer>
+                  </ResponsiveContainer>
+                </div>
               </div>
-
-              {/* 6️⃣ TreeMap */}
-              <div className="content-card">
-                <h3>Revenue by Category</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <Treemap
-                    data={revenueTreeData}
-                    dataKey="size"
-                    stroke="#fff"
-                    fill="#5b21b6"
-                  />
-                </ResponsiveContainer>
-              </div>
-            </div>
+            )
           )}
 
+          {/* CHILD ROUTES */}
           <Outlet />
         </section>
       </div>

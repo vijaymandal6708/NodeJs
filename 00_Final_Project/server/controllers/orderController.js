@@ -15,17 +15,17 @@ const createOrder = async (req, res) => {
     } = req.body;
 
     if (!items || items.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Order must contain at least one item",
-      });
+      return res.status(400).json({ message: "No items in order" });
     }
 
-    if (subtotal === undefined || totalAmount === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: "Subtotal and totalAmount are required",
-      });
+    // ✅ CATEGORY CHECK (NEW)
+    for (const item of items) {
+      if (!item.category) {
+        return res.status(400).json({
+          success: false,
+          message: "Item category missing",
+        });
+      }
     }
 
     const order = await Order.create({
@@ -36,28 +36,22 @@ const createOrder = async (req, res) => {
       shippingFee,
       totalAmount,
       payment: {
-        method: "razorpay",
-        razorpayOrderId: payment?.razorpayOrderId,
-        razorpayPaymentId: payment?.razorpayPaymentId,
-        razorpaySignature: payment?.razorpaySignature,
         status: "paid",
+        method: "razorpay",
       },
       orderStatus: "placed",
     });
 
     res.status(201).json({
       success: true,
-      message: "Order placed successfully",
       orderId: order._id,
     });
-  } catch (error) {
-    console.error("Create order error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while creating order",
-    });
+  } catch (err) {
+    console.error("Order create error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 
 /* ======================================================
    GET ALL ORDERS OF LOGGED-IN USER
@@ -79,6 +73,7 @@ const getMyOrders = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   createOrder,

@@ -77,22 +77,64 @@ const getDashboardStats = async (req, res) => {
   try {
     /* ===== PRODUCTS BY CATEGORY ===== */
     const productCategories = await ProductModel.aggregate([
-      {
-        $project: {
-          category: { $toLower: "$category" }, // 👈 normalize
+  {
+    $project: {
+      category: {
+        $switch: {
+          branches: [
+            {
+              case: {
+                $in: [
+                  { $toLower: "$category" },
+                  ["laptop", "laptops"]
+                ]
+              },
+              then: "laptops",
+            },
+            {
+              case: {
+                $in: [
+                  { $toLower: "$category" },
+                  ["smartphone", "smartphones", "mobile", "mobiles"]
+                ]
+              },
+              then: "smartphones",
+            },
+            {
+              case: {
+                $in: [
+                  { $toLower: "$category" },
+                  ["camera", "cameras"]
+                ]
+              },
+              then: "cameras",
+            },
+            {
+              case: {
+                $in: [
+                  { $toLower: "$category" },
+                  ["accessory", "accessories"]
+                ]
+              },
+              then: "accessories",
+            },
+          ],
+          default: "other",
         },
       },
-      {
-        $group: {
-          _id: "$category",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+    },
+  },
+  {
+    $group: {
+      _id: "$category",
+      count: { $sum: 1 },
+    },
+  },
+]);
+
 
     /* ===== ORDERS & REVENUE (already exists) ===== */
     const monthlyRevenue = await Order.aggregate([
-      { $match: { "payment.status": "paid" } },
       {
         $group: {
           _id: { $month: "$createdAt" },
@@ -101,6 +143,33 @@ const getDashboardStats = async (req, res) => {
       },
       { $sort: { _id: 1 } },
     ]);
+
+    const revenueByCategory = await Order.aggregate([
+  { $unwind: "$items" },
+  {
+    $project: {
+      category: {
+        $switch: {
+          branches: [
+            { case: { $in: [{ $toLower: "$items.category" }, ["laptop", "laptops"]] }, then: "laptops" },
+            { case: { $in: [{ $toLower: "$items.category" }, ["smartphone", "smartphones"]] }, then: "smartphones" },
+            { case: { $in: [{ $toLower: "$items.category" }, ["camera", "cameras"]] }, then: "cameras" },
+            { case: { $in: [{ $toLower: "$items.category" }, ["accessory", "accessories"]] }, then: "accessories" }
+          ],
+          default: "other"
+        }
+      },
+      amount: { $multiply: ["$items.price", "$items.quantity"] }
+    }
+  },
+  {
+    $group: {
+      _id: "$category",
+      size: { $sum: "$amount" }
+    }
+  }
+]);
+
 
     const weeklyOrders = await Order.aggregate([
       {
@@ -115,6 +184,7 @@ const getDashboardStats = async (req, res) => {
       success: true,
       stats: {
         productCategories,
+        revenueByCategory,
         monthlyRevenue,
         weeklyOrders,
       },
@@ -125,8 +195,46 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (err) {
+    console.error("Admin get orders error:", err);
+    res.status(500).json({ success: false });
+  }
+};
+
+const getProductsWithStock = async (req, res) => {
+  try {
+    const products = await ProductModel.find().select(
+      "name category price quantity defaultImage"
+    );
+
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.error("Fetch products error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch products",
+    });
+  }
+};
+
+
 module.exports = {
   adminLogin,
   addProduct,
   getDashboardStats,
+  getAllOrders,
+  getProductsWithStock,
 };

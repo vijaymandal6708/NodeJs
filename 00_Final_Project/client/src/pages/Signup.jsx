@@ -236,15 +236,15 @@ html, body {
 
         <div className="signup-right">
           <form className="signup-form" onSubmit={handleSubmit}>
-            <h2>Create Account</h2>
+            <h2 style={{fontSize:"20px",fontWeight:"bolder"}}>Create Account</h2>
 
             <input name="name" placeholder="Full Name" onChange={handleChange} required />
             <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
-            <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-            <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} required />
+            <input name="password" type="password" placeholder="Password" style={{width:"175px",display:"inline"}} onChange={handleChange} required />
+            <input name="confirmPassword" type="password" placeholder="Confirm Password" style={{width:"175px", marginLeft:"20px",display:"inline"}} onChange={handleChange} required />
             <input name="phone" placeholder="Contact Number" onChange={handleChange} required />
-            <input name="city" placeholder="City" onChange={handleChange} required />
-            <input name="pincode" placeholder="Pincode" onChange={handleChange} required />
+            <input name="city" placeholder="City" style={{width:"175px",display:"inline"}} onChange={handleChange} required />
+            <input name="pincode" placeholder="Pincode" style={{width:"175px",marginLeft:"20px"}} onChange={handleChange} required />
             <textarea name="address" placeholder="Address" onChange={handleChange} required />
 
             <button type="submit">Sign Up</button>

@@ -20,6 +20,7 @@ const Checkout = () => {
 
   /* ================= FETCH USER ================= */
   useEffect(() => {
+    console.log("🛒 CART ITEMS:", cartItems);
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -92,6 +93,7 @@ const Checkout = () => {
         items: cartItems.map((item) => ({
           productId: item.id,
           name: item.name,
+          category: item.category,
           price: item.price,
           quantity: item.qnty,
           image: item.image,

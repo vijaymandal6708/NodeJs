@@ -18,6 +18,12 @@ const orderSchema = new mongoose.Schema(
           required: true,
         },
         name: { type: String, required: true },
+        category: {
+          type: String,
+          required: true,
+          lowercase: true,
+          trim: true,
+        },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },
         image: { type: String },
